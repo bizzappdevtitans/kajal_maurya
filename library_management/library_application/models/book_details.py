@@ -1,11 +1,11 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class BookDetails(models.Model):
     _name = "book.details"
     _description = "Book Information"
     name = fields.Char(string="Title")
-    author_id = fields.Many2one("author.details", "Book IDs")
+    author_id = fields.Many2one("author.details", "Author")
     genre = fields.Selection(
         [
             ("fiction", "Fiction"),
@@ -50,18 +50,27 @@ class BookDetails(models.Model):
 
     color_picker = fields.Integer(string="Color Picker")
 
+
     def action_draft(self):
-        for rec in self:
-            rec.state = "draft"
+        self.write({"state": "draft"})
 
     def action_in_progress(self):
-        for rec in self:
-            rec.state = "in_progress"
+        for record in self:
+            if record.state == "draft":
+                self.write({"state": "in_progress"})
 
     def action_done(self):
-        for rec in self:
-            rec.state = "done"
+        self.write({"state": "done"})
 
     def action_cancel(self):
-        for rec in self:
-            rec.state = "cancel"
+        self.write({"state": "cancel"})
+
+
+
+    def action_toggle_availability(self):
+        self.write({"is_available": not self.is_available})
+
+
+
+
+

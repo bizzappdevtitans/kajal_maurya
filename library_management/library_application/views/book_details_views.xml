@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="view_book_details_kanban" model='ir.ui.view'>
-        <field name="name">book.details.search</field>
+        <field name="name">book.details.kanban</field>
         <field name="model">book.details</field>
         <field name="arch" type="xml">
             <kanban>
@@ -14,8 +14,8 @@
                                 </div>
                                 <div class="o_kanban_record_body">
                                     <div><field name="genre" /></div>
-                                    <div><field name="publication_date"/></div>
-                                    <div><field name="available_copies" /></div>
+                                    <div><field name="author_id"/></div>
+                                    <field name="publication_date"/>
                                     <div><field name="avg_rating" /></div>
                                     <div><field name="date_added_to_library" /></div>
                                 </div>
@@ -32,6 +32,9 @@
         <field name="model">book.details</field>
         <field name="arch" type="xml">
             <tree>
+                <header>
+                     <button name="action_in_progress" string="In Progress" type="object" />
+                </header>
                 <field name="name"/>
                 <field name="genre"/>
                 <field name="publication_date"/>
@@ -39,7 +42,6 @@
                 <field name="avg_rating"/>
                 <field name="date_added_to_library"/>
                 <field name="is_available"></field>
-                <!-- <field name="author_id"></field> -->
                 <field name="state"
                     decoration-success="state == 'done'"
                     decoration-info="state in('draft','in_progress')"
@@ -58,12 +60,13 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                        <!-- options="{'clickable':'1'}" -->
                         <button name="action_draft" string="Reset to Draft" type="object" states="cancel"/>
                         <button name="action_in_progress" string="In Progress" type="object" states="draft" class="oe_highlight"/>
                         <button name="action_done" string="Done" type="object" states="in_progress" class="oe_highlight"/>
                         <button name="action_cancel" string="Cancel" type="object" states="draft,in_progress"/>
                         <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,in_progress,done"/>
+                        <button name="%(action_author_details)d" string="Author Details"   type="action"/>
+                        <button name="action_toggle_availability" type="object" string="Toggle_Availability"  icon="fa-exchange"/>
                 </header>
                 <sheet>
                     <group>
@@ -82,8 +85,7 @@
                             <field name="author_id"/>
                             <field name="color" widget="color"/>
                             <field name="color_picker" widget="color_picker"/>
-                           <!--  <field name="progress_bar" widget="progressbar"/>
-                            <field name="percentpie" widget="percentpie"/> -->
+
                         </group>
                     </group>
                 </sheet>
@@ -96,14 +98,14 @@
         <field name="model">book.details</field>
         <field name="arch" type="xml">
             <search>
-                <field name="name"></field>
-                <field name="genre"></field>
-                <field name="publication_date"></field>
-                <field name="available_copies"></field>
-                <field name="avg_rating"></field>
-                <field name="date_added_to_library"></field>
-                <field name="is_available"></field>
-                <field name="author_id"></field>
+                <field name="name"/>
+                <field name="genre"/>
+                <field name="publication_date"/>
+                <field name="available_copies"/>
+                <field name="avg_rating"/>
+                <field name="date_added_to_library"/>
+                <field name="is_available"/>
+                <field name="author_id"/>
                 <filter string="The Great Gatsby"  name="name" domain="[('name','=','The Great Gatsby')]"/>
                 <filter string="The Diary of a Young Girl"  name="name" domain="[('name','=','The Diary of a Young Girl')]"/>
                 <filter string="1984"  name="name" domain="[('name','=','1984')]"/>

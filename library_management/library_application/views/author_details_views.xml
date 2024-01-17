@@ -19,16 +19,32 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" string="Books" name="books_count"
+                            icon="fa-pencil-square-o">
+                            <div class="o_stat_info">
+                                <field name="book_count" class="o_stat_value"/>
+                            </div>
+                        </button>
+                    </div>
                     <group>
                         <group>
                             <field name="name"></field>
                             <field name="bio"></field>
+                        </group>
+                        <group>
                             <field name="book_ids" widget="many2many_tags" option="{'no_create_edit':True}"></field>
                         </group>
                     </group>
                 </sheet>
             </form>
         </field>
+    </record>
+
+     <record id="action_author_details" model="ir.actions.act_window">
+        <field name="name">author.details</field>
+        <field name="res_model">author.details</field>
+        <field name="view_mode">tree,form</field>
     </record>
 
 </odoo>
