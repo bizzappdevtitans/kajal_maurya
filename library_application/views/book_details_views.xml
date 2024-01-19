@@ -18,6 +18,7 @@
                                     <field name="publication_date"/>
                                     <div><field name="avg_rating" /></div>
                                     <div><field name="date_added_to_library" /></div>
+                                    <div><field name="avg_rating" widget="priority" class="mr-3"/></div>
                                 </div>
                             </div>
                         </div>
@@ -44,10 +45,14 @@
                 <field name="is_available"></field>
                 <field name="state"
                     decoration-success="state == 'done'"
-                    decoration-info="state in('draft','in_progress')"
+                    decoration-muted="state == 'draft'"
+                    decoration-info="state == 'in_progress'"
                     decoration-danger="state == 'cancel'" widget="badge"/>
                 <field name="color" widget="color"/>
                 <field name="color_picker" widget="color_picker"/>
+                <field name="progress" widget="progressbar"/>
+
+
             </tree>
         </field>
 
@@ -76,10 +81,11 @@
                             <field name="publication_date"/>
                             <field name="available_copies" />
                             <field name="book_completion" widget="percentage"/>
-                            <field name="avg_rating" widget="priority" class="mr-3"/>
+
 
                         </group>
                         <group>
+                            <field name="avg_rating" widget="priority" class="mr-3"/>
                             <field name="date_added_to_library"/>
                             <field name="is_available" widget="boolean_toggle"/>
                             <field name="author_id"/>
@@ -88,7 +94,20 @@
 
                         </group>
                     </group>
+                    <notebook>
+                        <page string="Progress" name="progress">
+                            <group>
+                                <field name="progress" widget="percentpie" options="{'style': 'width:200px; height: 150px;'}"/>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
+
+                <!-- Chatter -->
+                <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>

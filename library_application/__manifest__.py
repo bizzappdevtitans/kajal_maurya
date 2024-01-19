@@ -5,14 +5,13 @@
     "author": "bizzappdev",
     "version": "15.0.1.0.0",
     "category": "uncategorized",
-    "depends": ["base"],
+    "depends": ["base",'mail'],
     "data": [
         "security/ir.model.access.csv",
         "views/book_details_views.xml",
         "views/author_details_views.xml",
         "views/book_menu_views.xml",
         "views/author_menu_views.xml",
-
     ],
     "application": True,
     "license": "LGPL-3",
