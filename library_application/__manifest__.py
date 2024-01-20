@@ -9,9 +9,8 @@
     "data": [
         "security/ir.model.access.csv",
         "views/book_details_views.xml",
-        "views/author_details_views.xml",
         "views/book_menu_views.xml",
-        "views/author_menu_views.xml",
+
     ],
     "application": True,
     "license": "LGPL-3",

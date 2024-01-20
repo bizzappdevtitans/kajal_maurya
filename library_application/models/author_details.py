@@ -6,8 +6,13 @@ class AuthorDetails(models.Model):
     _description = "Author Information"
     name = fields.Char(string="Author Name", required=True)
     book_ids = fields.One2many("book.details", "author_id", string="Books")
-    bio = fields.Char(string="Biography")
-    book_count = fields.Integer(string="Book", compute="compute_book_count")
+    biography = fields.Char(string="Biography")
+    book_count = fields.Integer(string="Book", compute="_compute_book_count")
+    nationality=fields.Char(string="Nationality")
+    email=fields.Char(string="Email")
+    award_received=fields.Text(string="Award Received")
+    birthday=fields.Date(string="Birthday")
+
 
     def _compute_book_count(self):
         for record in self:

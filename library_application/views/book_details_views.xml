@@ -70,7 +70,6 @@
                         <button name="action_done" string="Done" type="object" states="in_progress" class="oe_highlight"/>
                         <button name="action_cancel" string="Cancel" type="object" states="draft,in_progress"/>
                         <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,in_progress,done"/>
-                        <button name="%(action_author_details)d" string="Author Details"   type="action"/>
                         <button name="action_toggle_availability" type="object" string="Toggle_Availability"  icon="fa-exchange"/>
                 </header>
                 <sheet>
@@ -104,10 +103,10 @@
                 </sheet>
 
                 <!-- Chatter -->
-                <div class="oe_chatter">
+                <!-- <div class="oe_chatter">
                         <field name="message_follower_ids"/>
                         <field name="message_ids"/>
-                </div>
+                </div> -->
             </form>
         </field>
     </record>
@@ -166,4 +165,301 @@
         <field name="view_mode">kanban,tree,form,search,graph,pivot</field>
     </record>
 
+
+<!-- author details -->
+
+
+    <record id="view_author_details_tree" model='ir.ui.view'>
+        <field name="name">author.details.tree</field>
+        <field name="model">author.details</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="biography"/>
+                <field name="book_count"/>
+                <field name="nationality"/>
+                <field name="email"/>
+                <field name="award_received"/>
+                <field name="birthday" widget="date"/>
+            </tree>
+        </field>
+
+
+    </record>
+
+
+
+   <record id="view_author_details_form" model="ir.ui.view">
+        <field name="name">author.details.form</field>
+        <field name="model">author.details</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" string="Books" name="book_count"
+                            icon="fa-pencil-square-o">
+                            <div class="o_stat_info">
+                                <field name="book_count" class="o_stat_value"/>
+                            </div>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                           <field name="name"/>
+                           <field name="biography"/>
+                           <field name="book_count"/>
+                           <field name="nationality"/>
+                        </group>
+                        <group>
+                            <field name="book_ids" widget="many2many_tags" option="{'no_create_edit':True}"/>
+                            <field name="email"/>
+                            <field name="award_received"/>
+                            <field name="birthday" widget="date"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="view_author_details_search" model='ir.ui.view'>
+        <field name="name">author.details.search</field>
+        <field name="model">author.details</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="biography"/>
+                <field name="book_count"/>
+                <field name="nationality"/>
+                <field name="email"/>
+                <field name="award_received"/>
+                <field name="birthday" widget="date"/>
+            </search>
+        </field>
+
+
+    </record>
+
+
+
+    <record id="action_author_details" model="ir.actions.act_window">
+        <field name="name">author.details</field>
+        <field name="res_model">author.details</field>
+        <field name="view_mode">tree,form,search</field>
+    </record>
+
+
+    <!-- library details -->
+
+    <record id="view_library_details_tree" model="ir.ui.view">
+        <field name="name">library.details.tree</field>
+        <field name="model">library.details</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="address"/>
+                <field name="librarian"/>
+                <field name="founded_year" widget="date"/>
+                <field name="email"/>
+                <field name="opening_hours"/>
+                <field name="total_books"/>
+                <field name="member_count"/>
+                <field name="subscription_fee"/>
+            </tree>
+        </field>
+
+    </record>
+
+    <record id="view_library_details_form" model="ir.ui.view">
+        <field name="name">library.details.form</field>
+        <field name="model">library.details</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="address"/>
+                            <field name="librarian"/>
+                            <field name="founded_year" widget="date"/>
+                            <field name="member"/>
+                        </group>
+                        <group>
+                            <field name="email"/>
+                            <field name="opening_hours"/>
+                            <field name="total_books"/>
+                            <field name="member_count"/>
+                            <field name="subscription_fee"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+
+    </record>
+
+
+    <record id="view_library_details_search" model="ir.ui.view">
+        <field name="name">library.details.search</field>
+        <field name="model">library.details</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="address"/>
+                <field name="librarian"/>
+                <field name="founded_year" widget="date"/>
+                <field name="email"/>
+                <field name="opening_hours"/>
+                <field name="total_books"/>
+                <field name="member_count"/>
+                <field name="subscription_fee"/>
+            </search>
+        </field>
+
+    </record>
+
+    <record id="action_library_details" model="ir.actions.act_window">
+        <field name="name">library.details</field>
+        <field name="res_model">library.details</field>
+        <field name="view_mode">tree,form,search</field>
+    </record>
+
+
+    <!-- member details -->
+
+
+    <record id="view_member_details_tree" model="ir.ui.view">
+        <field name="name">member.details.tree</field>
+        <field name="model">member.details</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="address"/>
+                <field name="email"/>
+                <field name="subscription_id"/>
+                <field name="total_book_taken"/>
+                <field name="submission_date" widget="date"/>
+            </tree>
+        </field>
+
+    </record>
+
+    <record id="view_member_details_form" model="ir.ui.view">
+        <field name="name">member.details.form</field>
+        <field name="model">member.details</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="address"/>
+                            <field name="email" widget="email"/>
+                            <field name="library"/>
+                        </group>
+                        <group>
+                            <field name="subscription_id"/>
+                            <field name="total_book_taken"/>
+                            <field name="submission_date" widget="date"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+
+    </record>
+
+
+    <record id="view_member_details_search" model="ir.ui.view">
+        <field name="name">member.details.search</field>
+        <field name="model">member.details</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="address"/>
+                <field name="email"/>
+                <field name="subscription_id"/>
+                <field name="total_book_taken"/>
+                <field name="submission_date" widget="date"/>
+            </search>
+        </field>
+
+    </record>
+
+
+
+    <record id="action_member_details" model="ir.actions.act_window">
+        <field name="name">member.details</field>
+        <field name="res_model">member.details</field>
+        <field name="view_mode">tree,form,search</field>
+    </record>
+
+
+    <!-- book_loan -->
+
+    <record id="view_book_loan_details_tree" model="ir.ui.view">
+        <field name="name">book.loan.details.tree</field>
+        <field name="model">book.loan.details</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="issue_date" widget="date"/>
+                <field name="return_date" widget="date"/>
+                <field name="fine_amount"/>
+                <field name="status"/>
+            </tree>
+        </field>
+
+    </record>
+
+
+    <record id="view_book_loan_details_form" model="ir.ui.view">
+        <field name="name">book.loan.details.form</field>
+        <field name="model">book.loan.details</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="issue_date" widget="date"/>
+                            <field name="return_date" widget="date"/>
+                        </group>
+                        <group>
+                            <field name="fine_amount"/>
+                            <field name="status"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+
+    </record>
+
+
+    <record id="view_book_loan_details_search" model="ir.ui.view">
+        <field name="name">book.loan.details.search</field>
+        <field name="model">book.loan.details</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="issue_date" widget="date"/>
+                <field name="return_date" widget="date"/>
+                <field name="fine_amount"/>
+                <field name="status"/>
+            </search>
+        </field>
+
+    </record>
+
+
+    <record id="action_book_loan_details" model="ir.actions.act_window">
+        <field name="name">book.loan.details</field>
+        <field name="res_model">book.loan.details</field>
+        <field name="view_mode">tree,form,search</field>
+    </record>
+
+
+
 </odoo>
+
+
+

@@ -6,7 +6,7 @@ from odoo.exceptions import UserError, ValidationError
 class BookDetails(models.Model):
     _name = "book.details"
     _description = "Book Information"
-    _inherit = "mail.thread"
+    # _inherit = "mail.thread"
     name = fields.Char(string="Title")
     author_id = fields.Many2one("author.details", "Author")
     genre = fields.Selection(
@@ -53,6 +53,8 @@ class BookDetails(models.Model):
     color_picker = fields.Integer(string="Color Picker")
 
     progress = fields.Integer(string="Progress", compute="_compute_progress")
+
+    library=fields.Many2one('library.details',"Library")
 
     def action_draft(self):
         self.write({"state": "draft"})
@@ -101,6 +103,8 @@ class BookDetails(models.Model):
                 and record.publication_date > fields.Date.today()
             ):
                 raise ValidationError(_("The entered date is not acceptable"))
+
+
 
     @api.onchange("publication_date", "date_added_to_library")
     def _onchange_date_added_to_library(self):
