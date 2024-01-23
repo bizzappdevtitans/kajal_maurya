@@ -1,32 +1,31 @@
-from odoo import models, fields
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError, ValidationError
 
 
 class AuthorDetails(models.Model):
     _name = "author.details"
     _description = "Author Information"
+    _inherit="mail.thread"
     name = fields.Char(string="Author Name", required=True)
-    book_ids = fields.One2many("book.details", "author_id", string="Books")
     biography = fields.Char(string="Biography")
-    book_count = fields.Integer(string="Book", compute="_compute_book_count")
-    nationality=fields.Char(string="Nationality")
-    email=fields.Char(string="Email")
-    award_received=fields.Text(string="Award Received")
-    birthday=fields.Date(string="Birthday")
+    nationality = fields.Char(string="Nationality")
+    email = fields.Char(string="Email")
+    award_received = fields.Text(string="Award Received")
+    birthdate = fields.Date(string="Birthday")
+    books_written = fields.One2many("book.details", "authors", string="Books Written")
+    total_books_written = fields.Integer(
+        string="Total Books Written", compute="_compute_total_books_written"
+    )
 
 
-    def _compute_book_count(self):
+    @api.depends("books_written")
+    def _compute_total_books_written(self):
         for record in self:
-            book_count = self.env["book.details"].search_count(
-                [("author_id", "=", record.id)]
-            )
-        record.book_count = book_count
+            record.total_books_written = len(record.books_written)
 
-    def books_count(self):
-        return {
-            "type": "ir.actions.act_window",
-            "name": "Count Book",
-            "view_mode": "tree,form",
-            "res_model": "book.details",
-            "target": "current",
-            "domain": [("author_id", "=", self.id)],
-        }
+    @api.constrains("total_books_written")
+    def _check_total_books_written(self):
+        if self.total_books_written < 0:
+            raise ValidationError(_("Total Books written should not be negative"))
+
+

@@ -5,10 +5,10 @@ from odoo.exceptions import UserError, ValidationError
 
 class BookDetails(models.Model):
     _name = "book.details"
+    _inherit = "mail.thread"
     _description = "Book Information"
-    # _inherit = "mail.thread"
-    name = fields.Char(string="Title")
-    author_id = fields.Many2one("author.details", "Author")
+    name = fields.Char(string="Title", required=True)
+    authors = fields.Many2many("author.details", string="Authors")
     genre = fields.Selection(
         [
             ("fiction", "Fiction"),
@@ -20,6 +20,9 @@ class BookDetails(models.Model):
     )
     publication_date = fields.Date(string="Publication Date", help="Choose a date")
     available_copies = fields.Integer(string="Available Copies")
+    total_copies = fields.Integer(
+        string="Total Copies", compute="_compute_total_copies"
+    )
     avg_rating = fields.Selection(
         [
             ("0", "Normal"),
@@ -48,13 +51,10 @@ class BookDetails(models.Model):
 
     book_condition = fields.Selection([("new", "New"), ("used", "Used")], default="new")
 
-    color = fields.Char(string="Color", help="Choose your color")
-
-    color_picker = fields.Integer(string="Color Picker")
-
     progress = fields.Integer(string="Progress", compute="_compute_progress")
 
-    library=fields.Many2one('library.details',"Library")
+    library_id = fields.Many2one("library.details", string="Library")
+    bookloan_ids = fields.One2many("book.loan.details", "book_id", string="Book Loan")
 
     def action_draft(self):
         self.write({"state": "draft"})
@@ -104,8 +104,6 @@ class BookDetails(models.Model):
             ):
                 raise ValidationError(_("The entered date is not acceptable"))
 
-
-
     @api.onchange("publication_date", "date_added_to_library")
     def _onchange_date_added_to_library(self):
         if (
@@ -121,3 +119,13 @@ class BookDetails(models.Model):
                     "message": _("The book can't be added before getting published"),
                 }
             }
+
+    @api.depends("total_copies", "available_copies")
+    def _compute_total_copies(self):
+        for book in self:
+            book.total_copies = book.available_copies
+
+    @api.constrains("available_copies")
+    def _check_available_copies(self):
+        if self.available_copies < 0:
+            raise ValidationError(_("Available copies should not be negative"))
