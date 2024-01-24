@@ -7,8 +7,9 @@ class BookDetails(models.Model):
     _name = "book.details"
     _inherit = "mail.thread"
     _description = "Book Information"
+    _rec_name="name"
     name = fields.Char(string="Title", required=True)
-    authors = fields.Many2many("author.details", string="Authors")
+    author_ids = fields.Many2many("author.details", string="Authors")
     genre = fields.Selection(
         [
             ("fiction", "Fiction"),
@@ -20,9 +21,6 @@ class BookDetails(models.Model):
     )
     publication_date = fields.Date(string="Publication Date", help="Choose a date")
     available_copies = fields.Integer(string="Available Copies")
-    total_copies = fields.Integer(
-        string="Total Copies", compute="_compute_total_copies"
-    )
     avg_rating = fields.Selection(
         [
             ("0", "Normal"),
@@ -88,11 +86,6 @@ class BookDetails(models.Model):
 
     _sql_constraints = [
         ("unique_name", "unique (name)", "Title must be unique."),
-        (
-            "check_copies",
-            "check (available_copies>0)",
-            "Available copies must be non zero positive number .",
-        ),
     ]
 
     @api.constrains("publication_date")
@@ -120,12 +113,18 @@ class BookDetails(models.Model):
                 }
             }
 
-    @api.depends("total_copies", "available_copies")
-    def _compute_total_copies(self):
-        for book in self:
-            book.total_copies = book.available_copies
+    # @api.constrains("available_copies")
+    # def _check_available_copies(self):
+    #     if self.available_copies < 0:
+    #         raise ValidationError(_("Available copies should not be negative"))
 
-    @api.constrains("available_copies")
-    def _check_available_copies(self):
-        if self.available_copies < 0:
-            raise ValidationError(_("Available copies should not be negative"))
+
+    # @api.onchange("available_copies")
+    # def _check_availablity(self):
+    #     if self.available_copies<3:
+    #         self.is_available=False
+    #         print(self.is_available)
+    #         print("hii")
+    #     else:
+    #         self.is_available=True
+    #         print("true")

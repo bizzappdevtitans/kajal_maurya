@@ -5,7 +5,8 @@ from odoo.exceptions import UserError, ValidationError
 class LibraryDetails(models.Model):
     _name = "library.details"
     _description = "Library Information"
-    _inherit="mail.thread"
+    _inherit = "mail.thread"
+    _rec_name="name"
     name = fields.Char(string="Name", required=True)
     address = fields.Text(string="Address")
     librarian = fields.Char(string="Librarian")
@@ -46,7 +47,7 @@ class LibraryDetails(models.Model):
     def count_members(self):
         return {
             "type": "ir.actions.act_window",
-            "name": "Count Book",
+            "name": "Members",
             "view_mode": "tree,form",
             "res_model": "member.details",
             "target": "current",

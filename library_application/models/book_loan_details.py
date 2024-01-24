@@ -5,7 +5,8 @@ from odoo.exceptions import UserError, ValidationError
 class BookLoanDetails(models.Model):
     _name = "book.loan.details"
     _description = "Book Loan Information"
-    _inherit="mail.thread"
+    _inherit = "mail.thread"
+    _rec_name="book_id"
     issue_date = fields.Date(string="Isuue Date")
     return_date = fields.Date(string="Return Date")
     fine_amount = fields.Float(string="Fine Amount")
@@ -16,6 +17,7 @@ class BookLoanDetails(models.Model):
             ("overdue", "OverDue"),
         ],
         "Status",
+        default="returned",
     )
     member_id = fields.Many2one("member.details", string="Members")
     book_id = fields.Many2one("book.details", string="Books")
@@ -44,9 +46,26 @@ class BookLoanDetails(models.Model):
     def books_count(self):
         return {
             "type": "ir.actions.act_window",
-            "name": "Count Book",
+            "name": "Books",
             "view_mode": "tree,form",
             "res_model": "book.details",
             "target": "current",
             "domain": [("bookloan_ids", "=", self.id)],
         }
+
+    @api.onchange("status")
+    def _onchange_status(self):
+        if self.status=="onloan":
+            self.book_id.available_copies-=1
+            if self.book_id.available_copies<2:
+                self.book_id.is_available=False
+            else:
+                self.book_id.is_available=True
+        elif self.status=="overdue":
+            self.book_id.available_copies=self.book_id.available_copies
+            if self.book_id.available_copies<2:
+                self.book_id.is_available=False
+            else:
+                self.book_id.is_available=True
+        else:
+            self.book_id.available_copies+=1
