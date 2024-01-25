@@ -48,12 +48,8 @@
                     decoration-info="state == 'in_progress'"
                     decoration-danger="state == 'cancel'" widget="badge"/>
                 <field name="progress" widget="progressbar"/>
-
-
             </tree>
         </field>
-
-
     </record>
 
     <record id="view_book_details_form" model="ir.ui.view">
@@ -77,15 +73,12 @@
                             <field name="publication_date" widget="date"/>
                             <field name="available_copies" />
                             <field name="book_completion" widget="percentage"/>
-
-
                         </group>
                         <group>
                             <field name="avg_rating" widget="priority" class="mr-3"/>
                             <field name="date_added_to_library" widget="date"/>
                             <field name="is_available" widget="boolean_toggle"/>
                             <field name="author_ids" widget="many2many_tags" option="{'no_create_edit':True}"/>
-
                         </group>
                     </group>
                     <notebook>
@@ -96,12 +89,6 @@
                         </page>
                     </notebook>
                 </sheet>
-
-                <!-- Chatter -->
-                <div class="oe_chatter">
-                        <field name="message_follower_ids"/>
-                        <field name="message_ids"/>
-                </div>
             </form>
         </field>
     </record>
@@ -127,8 +114,6 @@
                 <filter string="Genre" name="genre" context="{'group_by':'genre'}"/>
             </search>
         </field>
-
-
     </record>
 
     <record id="view_book_details_graph" model='ir.ui.view'>
@@ -155,367 +140,10 @@
 
 
     <record id="action_book_details" model="ir.actions.act_window">
-        <field name="name">book.details</field>
+        <field name="name">Books</field>
         <field name="res_model">book.details</field>
         <field name="view_mode">kanban,tree,form,search,graph,pivot</field>
     </record>
-
-
-<!-- author details -->
-
-
-    <record id="view_author_details_tree" model='ir.ui.view'>
-        <field name="name">author.details.tree</field>
-        <field name="model">author.details</field>
-        <field name="arch" type="xml">
-            <tree>
-                <field name="name"/>
-                <field name="biography"/>
-                <field name="nationality"/>
-                <field name="email" widget="email"/>
-                <field name="award_received"/>
-                <field name="total_books_written"/>
-                <field name="birthdate" widget="date"/>
-            </tree>
-        </field>
-
-
-    </record>
-
-
-
-   <record id="view_author_details_form" model="ir.ui.view">
-        <field name="name">author.details.form</field>
-        <field name="model">author.details</field>
-        <field name="arch" type="xml">
-            <form>
-                <sheet>
-                    <group>
-                        <group>
-                           <field name="name"/>
-                           <field name="biography"/>
-                           <field name="nationality"/>
-                           <field name="birthdate" widget="date"/>
-                        </group>
-                        <group>
-                            <field name="books_written" widget="many2many_tags" option="{'no_create_edit':True}"/>
-                            <field name="email" widget="email"/>
-                            <field name="award_received"/>
-
-                        </group>
-                    </group>
-                </sheet>
-
-                <!-- Chatter -->
-                <div class="oe_chatter">
-                        <field name="message_follower_ids"/>
-                        <field name="message_ids"/>
-                </div>
-            </form>
-        </field>
-    </record>
-
-
-    <record id="view_author_details_search" model='ir.ui.view'>
-        <field name="name">author.details.search</field>
-        <field name="model">author.details</field>
-        <field name="arch" type="xml">
-            <search>
-                <field name="name"/>
-                <field name="biography"/>
-                <field name="nationality"/>
-                <field name="email"/>
-                <field name="award_received"/>
-                <field name="birthdate" widget="date"/>
-                <filter string="Nationality" name="nationality" context="{'group_by':'nationality'}"/>
-                <filter string="National Book Award"  name="award_received" domain="[('award_received','=','National Book Award')]"/>
-                <filter string="John Newbery Medal"  name="award_received" domain="[('award_received','=','John Newbery Medal')]"/>
-                <filter string="National Book Critics"  name="award_received" domain="[('award_received','=','National Book Critics')]"/>
-                <filter string="American Book Award"  name="award_received" domain="[('award_received','=','American Book Award')]"/>
-            </search>
-        </field>
-
-
-    </record>
-
-
-
-    <record id="action_author_details" model="ir.actions.act_window">
-        <field name="name">author.details</field>
-        <field name="res_model">author.details</field>
-        <field name="view_mode">tree,form,search</field>
-    </record>
-
-
-    <!-- library details -->
-
-    <record id="view_library_details_tree" model="ir.ui.view">
-        <field name="name">library.details.tree</field>
-        <field name="model">library.details</field>
-        <field name="arch" type="xml">
-            <tree>
-                <field name="name"/>
-                <field name="address"/>
-                <field name="librarian"/>
-                <field name="founded_year" widget="date"/>
-                <field name="email" widget="email"/>
-                <field name="opening_hours"/>
-                <field name="total_books"/>
-                <field name="member_count"/>
-                <field name="subscription_fee"/>
-            </tree>
-        </field>
-
-    </record>
-
-    <record id="view_library_details_form" model="ir.ui.view">
-        <field name="name">library.details.form</field>
-        <field name="model">library.details</field>
-        <field name="arch" type="xml">
-            <form>
-                <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" type="object" string="Members" name="count_members"
-                            icon="fa-pencil-square-o">
-                            <div class="o_stat_info">
-                                <field name="members_count" class="o_stat_value"/>
-                            </div>
-                        </button>
-                    </div>
-                    <group>
-                        <group>
-                            <field name="name"/>
-                            <field name="address"/>
-                            <field name="librarian"/>
-                            <field name="founded_year" widget="date"/>
-                            <field name="email"/>
-                        </group>
-                        <group>
-                            <field name="opening_hours"/>
-                            <field name="subscription_fee"/>
-                            <field name="book_ids" widget="many2many_tags" option="{'no_create_edit':True}"/>
-                            <field name="member_ids" widget="many2many_tags" option="{'no_create_edit':True}"/>
-                        </group>
-                    </group>
-                </sheet>
-                <!-- Chatter -->
-                <div class="oe_chatter">
-                        <field name="message_follower_ids"/>
-                        <field name="message_ids"/>
-                </div>
-            </form>
-        </field>
-
-    </record>
-
-
-    <record id="view_library_details_search" model="ir.ui.view">
-        <field name="name">library.details.search</field>
-        <field name="model">library.details</field>
-        <field name="arch" type="xml">
-            <search>
-                <field name="name"/>
-                <field name="address"/>
-                <field name="librarian"/>
-                <field name="founded_year" widget="date"/>
-                <field name="email" widget="email"/>
-                <field name="opening_hours"/>
-                <field name="total_books"/>
-                <field name="member_count"/>
-                <field name="subscription_fee"/>
-                <filter string="library1"  name="name" domain="[('name','=','library1')]"/>
-                <filter string="library2"  name="name" domain="[('name','=','library2')]"/>
-                <filter string="library3"  name="name" domain="[('name','=','library3')]"/>
-                <filter string="Address"  name="address" context="{'group_by':'address'}"/>
-            </search>
-        </field>
-
-    </record>
-
-    <record id="action_library_details" model="ir.actions.act_window">
-        <field name="name">library.details</field>
-        <field name="res_model">library.details</field>
-        <field name="view_mode">tree,form,search</field>
-    </record>
-
-
-    <!-- member details -->
-
-
-    <record id="view_member_details_tree" model="ir.ui.view">
-        <field name="name">member.details.tree</field>
-        <field name="model">member.details</field>
-        <field name="arch" type="xml">
-            <tree>
-                <field name="name"/>
-                <field name="address"/>
-                <field name="email" widget="email"/>
-                <field name="membership_start_date" widget="date"/>
-                <field name="subscription_status"
-                    decoration-success="subscription_status == 'active'"
-                    decoration-danger="subscription_status == 'inactive'" widget="badge"/>
-                <field name="subscription_expiry_date" widget="date"/>
-                <field name="book_borrowed_count"/>
-            </tree>
-        </field>
-
-    </record>
-
-    <record id="view_member_details_form" model="ir.ui.view">
-        <field name="name">member.details.form</field>
-        <field name="model">member.details</field>
-        <field name="arch" type="xml">
-            <form>
-                <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" type="object" string="Library" name="library_counts"
-                            icon="fa-pencil-square-o">
-                            <div class="o_stat_info">
-                                <field name="library_count" class="o_stat_value"/>
-                            </div>
-                        </button>
-                    </div>
-                    <group>
-                        <group>
-                            <field name="name"/>
-                            <field name="address"/>
-                            <field name="email" widget="email"/>
-                            <field name="library_id"/>
-                        </group>
-                        <group>
-                            <field name="membership_start_date" widget="date"/>
-                            <field name="subscription_expiry_date" widget="date"/>
-                            <field name="subscription_status"/>
-
-                            <!-- <field name="bookloan_ids" widget="many2many_tags" option="{'no_create_edit':True}"/> -->
-                        </group>
-                    </group>
-                </sheet>
-                <!-- Chatter -->
-                <div class="oe_chatter">
-                        <field name="message_follower_ids"/>
-                        <field name="message_ids"/>
-                </div>
-            </form>
-        </field>
-
-    </record>
-
-
-    <record id="view_member_details_search" model="ir.ui.view">
-        <field name="name">member.details.search</field>
-        <field name="model">member.details</field>
-        <field name="arch" type="xml">
-            <search>
-                 <field name="name"/>
-                <field name="address"/>
-                <field name="email" widget="email"/>
-                <field name="membership_start_date" widget="date"/>
-                <field name="subscription_status"/>
-                <field name="subscription_expiry_date" widget="date"/>
-                <filter string="Odhav"  name="address" domain="[('address','=','Odhav')]"/>
-                <filter string="Vastral"  name="address" domain="[('address','=','Vastral')]"/>
-                <filter string="subscription_status" name="subscription_status" context="{'group_by':'subscription_status'}"/>
-
-            </search>
-        </field>
-
-    </record>
-
-
-
-    <record id="action_member_details" model="ir.actions.act_window">
-        <field name="name">member.details</field>
-        <field name="res_model">member.details</field>
-        <field name="view_mode">tree,form,search</field>
-    </record>
-
-
-    <!-- book_loan -->
-
-    <record id="view_book_loan_details_tree" model="ir.ui.view">
-        <field name="name">book.loan.details.tree</field>
-        <field name="model">book.loan.details</field>
-        <field name="arch" type="xml">
-            <tree>
-                <field name="issue_date" widget="date"/>
-                <field name="return_date" widget="date"/>
-                <field name="fine_amount"/>
-                <field name="status"
-                    decoration-success="status == 'returned'"
-                    decoration-info="status == 'onloan'"
-                    decoration-danger="status == 'overdue'" widget="badge"/>
-                <field name="member_id"/>
-                <field name="book_id"/>
-            </tree>
-        </field>
-
-    </record>
-
-
-    <record id="view_book_loan_details_form" model="ir.ui.view">
-        <field name="name">book.loan.details.form</field>
-        <field name="model">book.loan.details</field>
-        <field name="arch" type="xml">
-            <form>
-                <sheet>
-                     <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" type="object" string="Books" name="books_count"
-                            icon="fa-pencil-square-o">
-                            <div class="o_stat_info">
-                                <field name="book_count" class="o_stat_value"/>
-                            </div>
-                        </button>
-                    </div>
-                    <group>
-                        <group>
-                            <field name="issue_date" widget="date"/>
-                            <field name="return_date" widget="date"/>
-                            <field name="fine_amount"/>
-
-                        </group>
-                        <group>
-                            <field name="status"/>
-                            <field name="member_id"/>
-                            <field name="book_id"/>
-
-                        </group>
-                    </group>
-                </sheet>
-                <!-- Chatter -->
-                <div class="oe_chatter">
-                        <field name="message_follower_ids"/>
-                        <field name="message_ids"/>
-                </div>
-            </form>
-        </field>
-
-    </record>
-
-
-    <record id="view_book_loan_details_search" model="ir.ui.view">
-        <field name="name">book.loan.details.search</field>
-        <field name="model">book.loan.details</field>
-        <field name="arch" type="xml">
-            <search>
-                <field name="issue_date" widget="date"/>
-                <field name="return_date" widget="date"/>
-                <field name="fine_amount"/>
-                <field name="status" widget="selection"/>
-                 <filter string="status" name="status" context="{'group_by':'status'}"/>
-            </search>
-        </field>
-
-    </record>
-
-
-    <record id="action_book_loan_details" model="ir.actions.act_window">
-        <field name="name">book.loan.details</field>
-        <field name="res_model">book.loan.details</field>
-        <field name="view_mode">tree,form,search</field>
-    </record>
-
-
 
 </odoo>
 

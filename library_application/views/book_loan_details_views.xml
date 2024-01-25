@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_book_loan_details_tree" model="ir.ui.view">
+        <field name="name">book.loan.details.tree</field>
+        <field name="model">book.loan.details</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="issue_date" widget="date"/>
+                <field name="due_date" widget="date"/>
+                <field name="fine_amount"/>
+                <field name="status"
+                    decoration-success="status == 'returned'"
+                    decoration-info="status == 'onloan'"
+                    decoration-danger="status == 'overdue'" widget="badge"/>
+                <field name="member_id"/>
+                <field name="book_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_book_loan_details_form" model="ir.ui.view">
+        <field name="name">book.loan.details.form</field>
+        <field name="model">book.loan.details</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                     <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" string="Books" name="books_count"
+                            icon="fa-pencil-square-o" attrs="{'invisible': [('book_count', '=', 0)]}">
+                            <div class="o_stat_info">
+                                <field name="book_count" class="o_stat_value"/>
+                            </div>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="issue_date" widget="date"/>
+                            <field name="return_date" widget="date"  attrs="{'invisible': [('status','=','onloan')] }" />
+                            <field name="due_date" widget="date"/>
+                            <field name="fine_amount"/>
+                        </group>
+                        <group>
+                            <field name="status"/>
+                            <field name="member_id"/>
+                            <field name="book_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_book_loan_details_search" model="ir.ui.view">
+        <field name="name">book.loan.details.search</field>
+        <field name="model">book.loan.details</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="issue_date" widget="date"/>
+                <field name="return_date" widget="date"/>
+                <field name="fine_amount"/>
+                <field name="status" widget="selection"/>
+                <filter string="status" name="status" context="{'group_by':'status'}"/>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="action_book_loan_details" model="ir.actions.act_window">
+        <field name="name">BookLoan</field>
+        <field name="res_model">book.loan.details</field>
+        <field name="view_mode">tree,form,search</field>
+    </record>
+
+</odoo>

@@ -8,40 +8,31 @@
         id="book_details_menu"
         name="book_details"
         parent="book_menu"
-        sequence="1"
         action="action_book_details"
         />
 
-
     <menuitem id="author_details_menu"
-            name="author_details"
-            parent="book_menu"
-            sequence="2"
-            action="action_author_details"
-            />
+        name="author_details"
+        parent="book_menu"
+        action="action_author_details"
+        />
 
     <menuitem id="library_details_menu"
-            name="library_details"
-            parent="book_menu"
-            sequence="3"
-            action="action_library_details"
-            />
+        name="library_details"
+        parent="book_menu"
+        action="action_library_details"
+        />
 
 
     <menuitem id="member_details_menu"
-            name="member_details"
-            parent="book_menu"
-            sequence="4"
-            action="action_member_details"
-            />
+        name="member_details"
+        parent="book_menu"
+        action="action_member_details"
+        />
 
     <menuitem id="book_loan_details_menu"
-            name="book_loan_details"
-            parent="book_menu"
-            sequence="5"
-            action="action_book_loan_details"
-            />
-
-
-
+        name="book_loan_details"
+        parent="book_menu"
+        action="action_book_loan_details"
+        />
 </odoo>

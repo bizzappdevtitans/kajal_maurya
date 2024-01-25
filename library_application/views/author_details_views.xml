@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_author_details_tree" model='ir.ui.view'>
+        <field name="name">author.details.tree</field>
+        <field name="model">author.details</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="biography"/>
+                <field name="nationality"/>
+                <field name="email" widget="email"/>
+                <field name="award_received"/>
+                <field name="total_books_written"/>
+                <field name="birthdate" widget="date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_author_details_form" model="ir.ui.view">
+        <field name="name">author.details.form</field>
+        <field name="model">author.details</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                           <field name="name"/>
+                           <field name="biography"/>
+                           <field name="nationality"/>
+                           <field name="birthdate" widget="date"/>
+                        </group>
+                        <group>
+                            <field name="books_written" widget="many2many_tags" option="{'no_create_edit':True}"/>
+                            <field name="email" widget="email"/>
+                            <field name="award_received"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_author_details_search" model='ir.ui.view'>
+        <field name="name">author.details.search</field>
+        <field name="model">author.details</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="biography"/>
+                <field name="nationality"/>
+                <field name="email"/>
+                <field name="award_received"/>
+                <field name="birthdate" widget="date"/>
+                <filter string="Nationality" name="nationality" context="{'group_by':'nationality'}"/>
+                <filter string="National Book Award"  name="award_received" domain="[('award_received','=','National Book Award')]"/>
+                <filter string="John Newbery Medal"  name="award_received" domain="[('award_received','=','John Newbery Medal')]"/>
+                <filter string="National Book Critics"  name="award_received" domain="[('award_received','=','National Book Critics')]"/>
+                <filter string="American Book Award"  name="award_received" domain="[('award_received','=','American Book Award')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_author_details" model="ir.actions.act_window">
+        <field name="name">Authors</field>
+        <field name="res_model">author.details</field>
+        <field name="view_mode">tree,form,search</field>
+    </record>
+
+</odoo>

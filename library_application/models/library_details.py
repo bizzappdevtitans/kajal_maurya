@@ -5,8 +5,7 @@ from odoo.exceptions import UserError, ValidationError
 class LibraryDetails(models.Model):
     _name = "library.details"
     _description = "Library Information"
-    _inherit = "mail.thread"
-    _rec_name="name"
+
     name = fields.Char(string="Name", required=True)
     address = fields.Text(string="Address")
     librarian = fields.Char(string="Librarian")
@@ -18,25 +17,33 @@ class LibraryDetails(models.Model):
         string="Member Count", compute="_compute_member_count"
     )
     subscription_fee = fields.Float(string="Subscription Fee")
-    book_ids = fields.One2many("book.details", "library_id", string="Books")
-    member_ids = fields.One2many("member.details", "library_id", "Member")
-    bookloan_ids = fields.One2many("book.loan.details", "library_id", "Book Loan")
+    book_ids = fields.One2many(comodel_name="book.details", inverse_name="library_id", string="Books")
+    member_ids = fields.One2many(comodel_name="member.details", inverse_name="library_id", string="Member")
+    bookloan_ids = fields.One2many(comodel_name="book.loan.details", inverse_name="library_id", string="Book Loan")
     members_count = fields.Integer(compute="_compute_members_count")
+
+    # method for computing total books
 
     @api.depends("book_ids")
     def _compute_total_books(self):
         for record in self:
             record.total_books = len(record.book_ids)
 
+    # method for computing total members
+
     @api.depends("member_ids")
     def _compute_member_count(self):
         for record in self:
             record.member_count = len(record.member_ids)
 
+    # validation for 'total_books'
+
     @api.constrains("total_books")
     def _check_total_books(self):
         if self.total_books < 0:
             raise ValidationError(_("Total Books should not be negative"))
+
+    # smart button implementation
 
     def _compute_members_count(self):
         for record in self:
@@ -45,11 +52,21 @@ class LibraryDetails(models.Model):
             )
 
     def count_members(self):
-        return {
-            "type": "ir.actions.act_window",
-            "name": "Members",
-            "view_mode": "tree,form",
-            "res_model": "member.details",
-            "target": "current",
-            "domain": [("library_id", "=", self.id)],
-        }
+        if self.members_count == 1:
+            return {
+                "type": "ir.actions.act_window",
+                "name": "Members",
+                "view_mode": "form",
+                "res_model": "member.details",
+                "target": "current",
+                "res_id": self.member_ids.id,
+            }
+        else:
+            return {
+                "type": "ir.actions.act_window",
+                "name": "Members",
+                "view_mode": "tree,form",
+                "res_model": "member.details",
+                "target": "current",
+                "domain": [("library_id", "=", self.id)],
+            }
