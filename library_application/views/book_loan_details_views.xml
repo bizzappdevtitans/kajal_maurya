@@ -24,10 +24,16 @@
         <field name="model">book.loan.details</field>
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <button name="action_returned" string="Reset to Returned" type="object" attrs="{'invisible':[('status','=','returned')]}"/>
+                    <button name="action_onloan" string="OnLoan" type="object" class="oe_highlight"/>
+                    <button name="action_overdue" string="Overdue" type="object" class="oe_highlight" attrs="{'invisible':['|',('status','=','overdue'),('status','=','returned')]}"/>
+                    <field name="status" widget="statusbar" nolabel="1" statusbar_visible="returned,onloan,overdue"/>
+
+                </header>
                 <sheet>
                      <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" type="object" string="Books" name="books_count"
-                            icon="fa-pencil-square-o" attrs="{'invisible': [('book_count', '=', 0)]}">
+                        <button class="oe_stat_button" type="object" string="Books" name="action_book_count" icon="fa-pencil-square-o" attrs="{'invisible': [('book_count', '=', 0)]}">
                             <div class="o_stat_info">
                                 <field name="book_count" class="o_stat_value"/>
                             </div>
@@ -36,12 +42,11 @@
                     <group>
                         <group>
                             <field name="issue_date" widget="date"/>
-                            <field name="return_date" widget="date"  attrs="{'invisible': [('status','=','onloan')] }" />
+                            <field name="return_date" widget="date"  attrs="{'invisible': ['|',('status','=','onloan'),('status','=','overdue')] }" />
                             <field name="due_date" widget="date"/>
                             <field name="fine_amount"/>
                         </group>
                         <group>
-                            <field name="status"/>
                             <field name="member_id"/>
                             <field name="book_id"/>
                         </group>
@@ -71,5 +76,7 @@
         <field name="res_model">book.loan.details</field>
         <field name="view_mode">tree,form,search</field>
     </record>
+
+
 
 </odoo>

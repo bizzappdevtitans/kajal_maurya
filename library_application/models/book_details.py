@@ -8,7 +8,13 @@ class BookDetails(models.Model):
     _description = "Book Information"
 
     name = fields.Char(string="Title", required=True)
-    author_ids = fields.Many2many(comodel_name="author.details", string="Authors")
+    author_ids = fields.Many2many(
+        comodel_name="author.details",
+        relation="book_author_relation",
+        string="Authors",
+        column1="books_written",
+        column2="author_ids",
+    )
     genre = fields.Selection(
         [
             ("fiction", "Fiction"),
@@ -20,6 +26,8 @@ class BookDetails(models.Model):
     )
     publication_date = fields.Date(string="Publication Date", help="Choose a date")
     available_copies = fields.Integer(string="Available Copies")
+    total_copies = fields.Integer(string="Total Copies")
+    price = fields.Float(string="Price")
     avg_rating = fields.Selection(
         [
             ("0", "Normal"),
@@ -45,60 +53,59 @@ class BookDetails(models.Model):
         required=True,
     )
 
-    book_completion = fields.Float(string="Book Completion")
-
     book_condition = fields.Selection(
-        [
-            ("new", "New"),
-            ("used", "Used"),
-        ],
+        [("new", "New"), ("used", "Used"), ("damage", "Damaged")],
         string="Book Condition",
         default="new",
         required=True,
     )
-
-    progress = fields.Integer(string="Progress", compute="_compute_progress")
+    progress_book_condition = fields.Integer(
+        string="Progress", compute="_compute_progress"
+    )
     library_id = fields.Many2one(comodel_name="library.details", string="Library")
     bookloan_ids = fields.One2many(
         comodel_name="book.loan.details", inverse_name="book_id", string="Book Loan"
     )
 
-    def action_draft(self):
-        self.write({"state": "draft"})
+    # action for change in 'price' field value according to 'book_condition'
+    def action_new(self):
+        self.write({"book_condition": "new"})
 
-    def action_in_progress(self):
+    def action_used(self):
         for record in self:
-            if record.state == "draft":
-                self.write({"state": "in_progress"})
+            self.price = self.price - 50
+            self.write({"book_condition": "used"})
 
-    def action_done(self):
-        self.write({"state": "done"})
+    def action_damage(self):
+        for record in self:
+            if record.book_condition == "used":
+                self.price = self.price - 100
+                self.write({"book_condition": "damage"})
 
-    def action_cancel(self):
-        self.write({"state": "cancel"})
-
+    # action for toggle button for 'is_available' field
     def action_toggle_availability(self):
         self.write({"is_available": not self.is_available})
 
-    @api.depends("state")
+    # method for changing the value of progressbar according to book_condition
+    @api.depends("book_condition")
     def _compute_progress(self):
         for record in self:
-            if record.state == "draft":
-                progress = 25
-            elif record.state == "in_progress":
-                progress = 50
-            elif record.state == "done":
-                progress = 100
+            if record.book_condition == "damage":
+                progress_book_condition = 50
+            elif record.book_condition == "used":
+                progress_book_condition = 75
+            elif record.book_condition == "new":
+                progress_book_condition = 100
             else:
-                progress = 0
-            record.progress = progress
+                progress_book_condition = 0
+            record.progress_book_condition = progress_book_condition
 
+    # constrain for name field
     _sql_constraints = [
         ("unique_name", "unique (name)", "Title must be unique."),
     ]
 
     # validation of 'publication date'
-
     @api.constrains("publication_date")
     def validate_publication_date(self):
         for record in self:
@@ -109,19 +116,18 @@ class BookDetails(models.Model):
                 raise ValidationError(_("The entered date is not acceptable"))
 
     # validation of 'publication date' with 'date added to library'
-
     @api.onchange("publication_date", "date_added_to_library")
     def _onchange_date_added_to_library(self):
-        if (
-            self.date_added_to_library
-            and self.publication_date
-            and self.date_added_to_library < self.publication_date
-        ):
+        if self.date_added_to_library < self.publication_date:
             return {
                 "warning": {
-                    "title": _(
-                        "date added to library is lesser than publication date."
-                    ),
+                    "title": _("Validation Error"),
                     "message": _("The book can't be added before getting published"),
                 }
             }
+
+    # validation for available copies
+    @api.onchange("available_copies", "total_copies")
+    def _onchange_available_copies(self):
+        if self.available_copies > self.total_copies:
+            raise ValidationError("Available Copies can't be greater than Total Copies")

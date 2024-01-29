@@ -13,21 +13,23 @@ class AuthorDetails(models.Model):
     award_received = fields.Text(string="Award Received")
     birthdate = fields.Date(string="Birthday")
     books_written = fields.Many2many(
-        comodel_name="book.details", inverse_name="author_ids", string="Books Written"
+        comodel_name="book.details",
+        string="Books Written",
+        relation="author_book_relation",
+        column1="author_ids",
+        column2="books_written",
     )
     total_books_written = fields.Integer(
         string="Total Books Written", compute="_compute_total_books_written"
     )
 
     # method for total book written count
-
     @api.depends("books_written")
     def _compute_total_books_written(self):
         for record in self:
             record.total_books_written = len(record.books_written)
 
     # validation for total book written
-
     @api.constrains("total_books_written")
     def _check_total_books_written(self):
         if self.total_books_written < 0:

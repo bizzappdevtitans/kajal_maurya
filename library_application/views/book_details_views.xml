@@ -32,9 +32,6 @@
         <field name="model">book.details</field>
         <field name="arch" type="xml">
             <tree>
-                <header>
-                     <button name="action_in_progress" string="In Progress" type="object" />
-                </header>
                 <field name="name"/>
                 <field name="genre"/>
                 <field name="publication_date"/>
@@ -42,12 +39,11 @@
                 <field name="avg_rating"/>
                 <field name="date_added_to_library"/>
                 <field name="is_available"/>
-                <field name="state"
-                    decoration-success="state == 'done'"
-                    decoration-muted="state == 'draft'"
-                    decoration-info="state == 'in_progress'"
-                    decoration-danger="state == 'cancel'" widget="badge"/>
-                <field name="progress" widget="progressbar"/>
+                <field name="book_condition"
+                    decoration-success="book_condition == 'new'"
+                    decoration-muted="book_condition == 'damage'"
+                    decoration-info="book_condition == 'used'" widget="badge"/>
+                <field name="progress_book_condition" widget="progressbar"/>
             </tree>
         </field>
     </record>
@@ -58,12 +54,11 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                        <button name="action_draft" string="Reset to Draft" type="object" states="cancel"/>
-                        <button name="action_in_progress" string="In Progress" type="object" states="draft" class="oe_highlight"/>
-                        <button name="action_done" string="Done" type="object" states="in_progress" class="oe_highlight"/>
-                        <button name="action_cancel" string="Cancel" type="object" states="draft,in_progress"/>
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,in_progress,done"/>
-                        <button name="action_toggle_availability" type="object" string="Toggle_Availability"  icon="fa-exchange"/>
+                    <button name="action_new" string="New" type="object" class="oe_highlight" attrs="{'invisible':['|',('book_condition','=','used'),('book_condition','=','damage')]}"/>
+                    <button name="action_used" string="Used" type="object" class="oe_highlight"  attrs="{'invisible':[('book_condition','=','damage')]}"/>
+                    <button name="action_damage" string="Damaged" type="object" class="oe_highlight" />
+                    <field name="book_condition" widget="statusbar" nolabel="1" statusbar_visible="damage,used,new"/>
+                    <button name="action_toggle_availability" type="object" string="Toggle_Availability" icon="fa-exchange"/>
                 </header>
                 <sheet>
                     <group>
@@ -72,9 +67,11 @@
                             <field name="genre"/>
                             <field name="publication_date" widget="date"/>
                             <field name="available_copies" />
-                            <field name="book_completion" widget="percentage"/>
+                            <field name="price"/>
+
                         </group>
                         <group>
+                            <field name="total_copies" />
                             <field name="avg_rating" widget="priority" class="mr-3"/>
                             <field name="date_added_to_library" widget="date"/>
                             <field name="is_available" widget="boolean_toggle"/>
@@ -82,9 +79,9 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Progress" name="progress">
+                        <page string="Progress" name="progress_book_condition">
                             <group>
-                                <field name="progress" widget="percentpie" options="{'style': 'width:200px; height: 150px;'}"/>
+                                <field name="progress_book_condition" widget="percentpie" options="{'style': 'width:200px; height: 150px;'}"/>
                             </group>
                         </page>
                     </notebook>
