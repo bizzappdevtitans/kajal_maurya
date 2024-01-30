@@ -24,7 +24,9 @@ class BookDetails(models.Model):
         ],
         string="Genre",
     )
-    publication_date = fields.Date(string="Publication Date", help="Choose a date")
+    publication_date = fields.Date(
+        string="Publication Date", help="Choose a date", default=fields.Date.today()
+    )
     available_copies = fields.Integer(string="Available Copies")
     total_copies = fields.Integer(string="Total Copies")
     price = fields.Float(string="Price")
@@ -39,7 +41,9 @@ class BookDetails(models.Model):
         default="0",
         required=True,
     )
-    date_added_to_library = fields.Date(string="Date Added To Library")
+    date_added_to_library = fields.Date(
+        string="Date Added To Library", default=fields.Date.today()
+    )
     is_available = fields.Boolean(string="Is Available", default=True)
     state = fields.Selection(
         [
@@ -66,6 +70,15 @@ class BookDetails(models.Model):
     bookloan_ids = fields.One2many(
         comodel_name="book.loan.details", inverse_name="book_id", string="Book Loan"
     )
+    sequence_no = fields.Char(
+        string="Number",
+        required=True,
+        readonly=True,
+        index=True,
+        copy=False,
+        default=lambda self: _("New"),
+    )
+    book_image = fields.Binary()
 
     # action for change in 'price' field value according to 'book_condition'
     def action_new(self):
@@ -131,3 +144,21 @@ class BookDetails(models.Model):
     def _onchange_available_copies(self):
         if self.available_copies > self.total_copies:
             raise ValidationError("Available Copies can't be greater than Total Copies")
+
+    # Sequence for book.details
+    @api.model
+    def create(self, vals):
+        if vals.get("sequence_no", _("New")) == _("New"):
+            vals["sequence_no"] = self.env["ir.sequence"].next_by_code(
+                "book.details"
+            ) or _("New")
+        result = super(BookDetails, self).create(vals)
+        return result
+
+    # validation of 'price'
+    @api.constrains("price")
+    def _check_price(self):
+        if self.price < 0:
+            raise ValidationError(_("Book Price should not be negative"))
+
+

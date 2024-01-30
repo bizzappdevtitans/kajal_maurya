@@ -6,6 +6,7 @@
         <field name="model">book.loan.details</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="sequence_no"/>
                 <field name="issue_date" widget="date"/>
                 <field name="due_date" widget="date"/>
                 <field name="fine_amount"/>
@@ -32,23 +33,29 @@
 
                 </header>
                 <sheet>
-                     <div class="oe_button_box" name="button_box">
+                    <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" type="object" string="Books" name="action_book_count" icon="fa-pencil-square-o" attrs="{'invisible': [('book_count', '=', 0)]}">
                             <div class="o_stat_info">
                                 <field name="book_count" class="o_stat_value"/>
                             </div>
                         </button>
                     </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="sequence_no" readonly="1"/>
+                        </h1>
+                    </div>
                     <group>
                         <group>
-                            <field name="issue_date" widget="date"/>
-                            <field name="return_date" widget="date"  attrs="{'invisible': ['|',('status','=','onloan'),('status','=','overdue')] }" />
+                            <field name="member_id"/>
                             <field name="due_date" widget="date"/>
                             <field name="fine_amount"/>
                         </group>
                         <group>
-                            <field name="member_id"/>
+
                             <field name="book_id"/>
+                            <field name="issue_date" widget="date"/>
+                            <field name="return_date" widget="date"  attrs="{'invisible': ['|',('status','=','onloan'),('status','=','overdue')] }" />
                         </group>
                     </group>
                 </sheet>
@@ -66,8 +73,22 @@
                 <field name="fine_amount"/>
                 <field name="status" widget="selection"/>
                 <filter string="status" name="status" context="{'group_by':'status'}"/>
+                 <searchpanel>
+                    <field name="book_id" icon="fa-tasks"/>
+                </searchpanel>
             </search>
         </field>
+    </record>
+
+    <record id="seq_bookloan_details" model="ir.sequence">
+           <field name="name">BookLoan Sequence</field>
+           <field name="code">book.loan.details</field>
+           <field name="prefix">BL</field>
+           <field name="padding">5</field>
+           <field name="active">True</field>
+           <field name="number_increment">1</field>
+           <field name="number_next">1</field>
+           <field name="implementation">standard</field>
     </record>
 
 

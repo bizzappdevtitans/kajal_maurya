@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
     <record id="view_member_details_tree" model="ir.ui.view">
         <field name="name">member.details.tree</field>
         <field name="model">member.details</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="sequence_no"/>
                 <field name="name"/>
                 <field name="address"/>
                 <field name="email" widget="email"/>
@@ -24,6 +26,11 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="sequence_no" readonly="1"/>
+                        </h1>
+                    </div>
                     <group>
                         <group>
                             <field name="name"/>
@@ -59,8 +66,22 @@
                 <filter string="Odhav"  name="address" domain="[('address','=','Odhav')]"/>
                 <filter string="Vastral"  name="address" domain="[('address','=','Vastral')]"/>
                 <filter string="subscription_status" name="subscription_status" context="{'group_by':'subscription_status'}"/>
+                 <searchpanel>
+                    <field name="library_id" icon="fa-tasks"/>
+                </searchpanel>
             </search>
         </field>
+    </record>
+
+    <record id="seq_member_details" model="ir.sequence">
+           <field name="name">Member Sequence</field>
+           <field name="code">member.details</field>
+           <field name="prefix">M</field>
+           <field name="padding">5</field>
+           <field name="active">True</field>
+           <field name="number_increment">1</field>
+           <field name="number_next">1</field>
+           <field name="implementation">standard</field>
     </record>
 
     <record id="action_member_details" model="ir.actions.act_window">

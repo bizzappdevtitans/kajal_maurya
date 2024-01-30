@@ -25,6 +25,14 @@ class BookLoanDetails(models.Model):
     book_id = fields.Many2one(comodel_name="book.details", string="Books")
     library_id = fields.Many2one(comodel_name="library.details", string="Library")
     book_count = fields.Integer(compute="_compute_book_count")
+    sequence_no = fields.Char(
+        string="Number",
+        required=True,
+        readonly=True,
+        index=True,
+        copy=False,
+        default=lambda self: _('New'),
+    )
 
     # validation of ' fine amount'
     @api.constrains("fine_amount")
@@ -101,3 +109,13 @@ class BookLoanDetails(models.Model):
                     record.book_id.is_available = False
                 else:
                     record.book_id.is_available = True
+
+    # Sequence for bookloan.details
+    @api.model
+    def create(self, vals):
+        if vals.get("sequence_no", _("New")) == _("New"):
+            vals["sequence_no"] = self.env["ir.sequence"].next_by_code(
+                "book.loan.details"
+            ) or _("New")
+        result = super(BookLoanDetails, self).create(vals)
+        return result

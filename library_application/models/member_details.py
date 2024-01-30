@@ -26,10 +26,20 @@ class MemberDetails(models.Model):
         required=True,
     )
     bookloan_ids = fields.Many2many(
-        comodel_name="book.loan.details", string="Book Loan"
+        comodel_name="book.loan.details", string="Book Loan",relation="member_bookloan_relation",
+        column1="member_id",
+        column2="bookloan_ids",
     )
     book_borrowed_count = fields.Integer(
         string="Book Borrowed Count", compute="_compute_book_borrowed_count"
+    )
+    sequence_no = fields.Char(
+        string="Number",
+        required=True,
+        readonly=True,
+        index=True,
+        copy=False,
+        default=lambda self: _("New"),
     )
 
     # method for computing borrowed book
@@ -63,3 +73,13 @@ class MemberDetails(models.Model):
             self.subscription_status = "inactive"
         else:
             self.subscription_status = "active"
+
+    ## Sequence for member.details
+    @api.model
+    def create(self, vals):
+        if vals.get("sequence_no", _("New")) == _("New"):
+            vals["sequence_no"] = self.env["ir.sequence"].next_by_code(
+                "member.details"
+            ) or _("New")
+        result = super(MemberDetails, self).create(vals)
+        return result

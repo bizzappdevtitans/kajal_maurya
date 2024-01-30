@@ -27,6 +27,14 @@ class LibraryDetails(models.Model):
         comodel_name="book.loan.details", inverse_name="library_id", string="Book Loan"
     )
     member_count = fields.Integer(compute="_compute_member_count")
+    sequence_no = fields.Char(
+        string="Number",
+        required=True,
+        readonly=True,
+        index=True,
+        copy=False,
+        default=lambda self: _("New"),
+    )
 
     # method for computing total books
     @api.depends("book_ids")
@@ -72,3 +80,13 @@ class LibraryDetails(models.Model):
                 "target": "current",
                 "domain": [("library_id", "=", self.id)],
             }
+
+    # Sequence for library.details
+    @api.model
+    def create(self, vals):
+        if vals.get("sequence_no", _("New")) == _("New"):
+            vals["sequence_no"] = self.env["ir.sequence"].next_by_code(
+                "library.details"
+            ) or _("New")
+        result = super(LibraryDetails, self).create(vals)
+        return result

@@ -12,6 +12,14 @@ class AuthorDetails(models.Model):
     email = fields.Char(string="Email")
     award_received = fields.Text(string="Award Received")
     birthdate = fields.Date(string="Birthday")
+    sequence_no = fields.Char(
+        string="Number",
+        required=True,
+        readonly=True,
+        index=True,
+        copy=False,
+        default=lambda self: _("New"),
+    )
     books_written = fields.Many2many(
         comodel_name="book.details",
         string="Books Written",
@@ -34,3 +42,15 @@ class AuthorDetails(models.Model):
     def _check_total_books_written(self):
         if self.total_books_written < 0:
             raise ValidationError(_("Total Books written should not be negative"))
+
+    # Sequence for author.details
+    @api.model
+    def create(self, vals):
+        if vals.get("sequence_no", _("New")) == _("New"):
+            vals["sequence_no"] = self.env["ir.sequence"].next_by_code(
+                "author.details"
+            ) or _("New")
+        result = super(AuthorDetails, self).create(vals)
+        return result
+
+
