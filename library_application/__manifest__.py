@@ -8,6 +8,11 @@
     "depends": ["base"],
     "data": [
         "security/ir.model.access.csv",
+        "data/book_details_sequence.xml",
+        "data/author_details_sequence.xml",
+        "data/library_details_sequence.xml",
+        "data/member_details_sequence.xml",
+        "data/bookloan_details_sequence.xml",
         "views/book_details_views.xml",
         "views/author_details_views.xml",
         "views/library_details_views.xml",

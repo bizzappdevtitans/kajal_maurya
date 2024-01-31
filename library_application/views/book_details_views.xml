@@ -67,16 +67,16 @@
                             <field name="sequence_no" readonly="1"/>
                         </h1>
                     </div>
+                     <field name="book_image" widget="image" options="{'size': [80, 80]}" class="oe_avatar"/>
                     <group>
                         <group>
-                            <field name="book_image" widget="image" options="{'size': [100, 100]}"/>
                             <field name="name" />
                             <field name="genre"/>
                             <field name="publication_date" widget="date"/>
                             <field name="available_copies" />
+                            <field name="price"/>
                         </group>
                         <group>
-                            <field name="price"/>
                             <field name="total_copies" />
                             <field name="avg_rating" widget="priority" class="mr-3"/>
                             <field name="date_added_to_library" widget="date"/>
@@ -143,18 +143,6 @@
             </pivot>
         </field>
     </record>
-
-    <record id="seq_book_details" model="ir.sequence">
-           <field name="name">Book Sequence</field>
-           <field name="code">book.details</field>
-           <field name="prefix">B</field>
-           <field name="padding">5</field>
-           <field name="active">True</field>
-           <field name="number_increment">1</field>
-           <field name="number_next">1</field>
-           <field name="implementation">standard</field>
-    </record>
-
 
     <record id="action_book_details" model="ir.actions.act_window">
         <field name="name">Books</field>

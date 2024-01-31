@@ -57,7 +57,7 @@
         <field name="model">member.details</field>
         <field name="arch" type="xml">
             <search>
-                 <field name="name"/>
+                <field name="name"/>
                 <field name="address"/>
                 <field name="email" widget="email"/>
                 <field name="membership_start_date" widget="date"/>
@@ -71,17 +71,6 @@
                 </searchpanel>
             </search>
         </field>
-    </record>
-
-    <record id="seq_member_details" model="ir.sequence">
-           <field name="name">Member Sequence</field>
-           <field name="code">member.details</field>
-           <field name="prefix">M</field>
-           <field name="padding">5</field>
-           <field name="active">True</field>
-           <field name="number_increment">1</field>
-           <field name="number_next">1</field>
-           <field name="implementation">standard</field>
     </record>
 
     <record id="action_member_details" model="ir.actions.act_window">

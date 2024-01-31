@@ -78,7 +78,7 @@ class BookDetails(models.Model):
         copy=False,
         default=lambda self: _("New"),
     )
-    book_image = fields.Binary()
+    book_image = fields.Image(string="Book Image")
 
     # action for change in 'price' field value according to 'book_condition'
     def action_new(self):
@@ -161,4 +161,9 @@ class BookDetails(models.Model):
         if self.price < 0:
             raise ValidationError(_("Book Price should not be negative"))
 
-
+    def write(self, vals):
+        if "price" in vals:
+            price = vals.get("price")
+            if price >= 650:
+                self.avg_rating = "2"
+        return super(BookDetails, self).write(vals)

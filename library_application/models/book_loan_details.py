@@ -31,7 +31,7 @@ class BookLoanDetails(models.Model):
         readonly=True,
         index=True,
         copy=False,
-        default=lambda self: _('New'),
+        default=lambda self: _("New"),
     )
 
     # validation of ' fine amount'

@@ -26,7 +26,9 @@ class MemberDetails(models.Model):
         required=True,
     )
     bookloan_ids = fields.Many2many(
-        comodel_name="book.loan.details", string="Book Loan",relation="member_bookloan_relation",
+        comodel_name="book.loan.details",
+        string="Book Loan",
+        relation="member_bookloan_relation",
         column1="member_id",
         column2="bookloan_ids",
     )
@@ -83,3 +85,15 @@ class MemberDetails(models.Model):
             ) or _("New")
         result = super(MemberDetails, self).create(vals)
         return result
+
+    class LibraryDetailsInherited(models.Model):
+        _inherit = "library.details"
+
+        def name_get(self):
+            result = []
+            for record in self:
+                result.append(
+                    (record.id, "%s - %s" % (record.name, record.member_count))
+                )
+            return result
+            return super(MemberDetails, self).name_get()
