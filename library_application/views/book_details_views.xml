@@ -75,6 +75,7 @@
                             <field name="publication_date" widget="date"/>
                             <field name="available_copies" />
                             <field name="price"/>
+                            <field name="library_id"/>
                         </group>
                         <group>
                             <field name="total_copies" />

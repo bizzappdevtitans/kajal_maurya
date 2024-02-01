@@ -86,14 +86,32 @@ class MemberDetails(models.Model):
         result = super(MemberDetails, self).create(vals)
         return result
 
-    class LibraryDetailsInherited(models.Model):
-        _inherit = "library.details"
+    def write(self, vals):
+        if "name" in vals:
+            vals["name"] = vals["name"].capitalize()
+        return super(MemberDetails, self).write(vals)
 
-        def name_get(self):
-            result = []
-            for record in self:
-                result.append(
-                    (record.id, "%s - %s" % (record.name, record.member_count))
+    def unlink(self):
+        if self.bookloan_ids:
+            raise UserError("You can't delete the record")
+        return super(MemberDetails,self).unlink()
+
+    def name_get(self):
+        result = []
+        for record in self:
+            result.append(
+                    (record.id, "%s - %s" % (record.name, record.sequence_no))
                 )
-            return result
-            return super(MemberDetails, self).name_get()
+        return result
+
+
+    @api.model
+    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
+        args = list(args or [])
+        if name :
+            args += ['|',('name', operator, name), ('email', operator, name),]
+        return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+
+
+
+

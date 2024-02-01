@@ -90,3 +90,21 @@ class LibraryDetails(models.Model):
             ) or _("New")
         result = super(LibraryDetails, self).create(vals)
         return result
+
+    def write(self, vals):
+        if "name" in vals:
+            vals["name"] = vals["name"].capitalize()
+        return super(LibraryDetails, self).write(vals)
+
+    def name_get(self):
+        result = []
+        for record in self:
+            result.append(
+                    (record.id, "%s - %s" % (record.name, record.address))
+                )
+        return result
+
+
+
+
+

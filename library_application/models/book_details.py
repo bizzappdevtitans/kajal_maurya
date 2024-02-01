@@ -167,3 +167,29 @@ class BookDetails(models.Model):
             if price >= 650:
                 self.avg_rating = "2"
         return super(BookDetails, self).write(vals)
+
+    def unlink(self):
+        if self.author_ids:
+            raise UserError("You can't delete the record")
+        return super(BookDetails,self).unlink()
+
+    # @api.model
+    # def _name_search(
+    #     self, name, args=None, operator="ilike", limit=100, name_get_uid=None
+    # ):
+    #     args = args or []
+    #     domain = ["|", ("name", operator, name), ("genre", operator, name)]
+    #     books = self._search(domain + args, limit=limit)
+    #     print(books)
+    #     return books
+
+    def name_get(self):
+        result = []
+        for record in self:
+            result.append(
+                    (record.id, "%s - %s" % (record.name, record.genre))
+                )
+        return result
+
+
+

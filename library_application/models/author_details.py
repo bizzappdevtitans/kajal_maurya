@@ -53,4 +53,21 @@ class AuthorDetails(models.Model):
         result = super(AuthorDetails, self).create(vals)
         return result
 
+    def write(self, vals):
+        if "name" in vals:
+            vals["name"] = vals["name"].capitalize()
+            print(vals)
+        return super(AuthorDetails, self).write(vals)
 
+    def unlink(self):
+        if self.books_written:
+            raise UserError("You can't delete the record")
+        return super(AuthorDetails,self).unlink()
+
+    def name_get(self):
+        result = []
+        for record in self:
+            result.append(
+                    (record.id, "%s - %s" % (record.name, record.nationality))
+                )
+        return result
