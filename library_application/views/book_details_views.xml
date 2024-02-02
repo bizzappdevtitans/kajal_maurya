@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_book_details_kanban" model='ir.ui.view'>
+        <field name="name">book.details.kanban</field>
+        <field name="model">book.details</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+
+                            <div class="o_kanban_image">
+                                 <field name="book_image" widget="image"/>
+                             </div>
+                            <div class="o_kanban_record_body">
+                                <div><field name="name"/></div>
+                                <div><field name="genre" /></div>
+                                <div><field name="publication_date"/></div>
+                                <div><field name="date_added_to_library" /></div>
+                                <div><field name="avg_rating" widget="priority" class="mr-3"/></div>
+                            </div>
+
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_book_details_tree" model='ir.ui.view'>
+        <field name="name">book.details.tree</field>
+        <field name="model">book.details</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence_no"/>
+                <field name="name"/>
+                <field name="genre"/>
+                <field name="publication_date"/>
+                <field name="available_copies"/>
+                <field name="date_added_to_library"/>
+                <field name="is_available"/>
+                <field name="book_condition"
+                    decoration-success="book_condition == 'new'"
+                    decoration-muted="book_condition == 'damage'"
+                    decoration-info="book_condition == 'used'" widget="badge"/>
+                <field name="progress_book_condition" widget="progressbar"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_book_details_form" model="ir.ui.view">
+        <field name="name">book.details.form</field>
+        <field name="model">book.details</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_new" string="New" type="object" class="oe_highlight" attrs="{'invisible':['|',('book_condition','=','used'),('book_condition','=','damage')]}"/>
+                    <button name="action_used" string="Used" type="object" class="oe_highlight"  attrs="{'invisible':[('book_condition','=','damage')]}"/>
+                    <button name="action_damage" string="Damaged" type="object" class="oe_highlight" />
+                    <field name="book_condition" widget="statusbar" nolabel="1" statusbar_visible="damage,used,new"/>
+                    <button name="action_toggle_availability" type="object" string="Toggle_Availability" icon="fa-exchange"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="sequence_no" readonly="1"/>
+                        </h1>
+                    </div>
+                     <field name="book_image" widget="image" options="{'size': [80, 80]}" class="oe_avatar"/>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="genre"/>
+                            <field name="publication_date" widget="date"/>
+                            <field name="available_copies" />
+                            <field name="price"/>
+                            <field name="library_id"/>
+                        </group>
+                        <group>
+                            <field name="availability_message"/>
+                            <field name="total_copies" />
+                            <field name="avg_rating" widget="priority" class="mr-3"/>
+                            <field name="date_added_to_library" widget="date"/>
+                            <field name="is_available" widget="boolean_toggle"/>
+                            <field name="author_ids" widget="many2many_tags" option="{'no_create_edit':True}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Progress" name="progress_book_condition">
+                            <group>
+                                <field name="progress_book_condition" widget="percentpie" options="{'style': 'width:200px; height: 150px;'}"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+     <record id="view_book_details_search" model='ir.ui.view'>
+        <field name="name">book.details.search</field>
+        <field name="model">book.details</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="author_ids"/>
+                <field name="genre"/>
+                <field name="publication_date"/>
+                <field name="available_copies"/>
+                <field name="avg_rating"/>
+                <field name="date_added_to_library"/>
+                <field name="is_available"/>
+                <filter string="The Great Gatsby"  name="name" domain="[('name','=','The Great Gatsby')]"/>
+                <filter string="The Diary of a Young Girl"  name="name" domain="[('name','=','The Diary of a Young Girl')]"/>
+                <filter string="1984"  name="name" domain="[('name','=','1984')]"/>
+                <filter string="Rebecca"  name="name" domain="[('name','=','Rebecca')]"/>
+                <filter string="Guns of August"  name="name" domain="[('name','=','Guns of August')]"/>
+                <filter string="Genre" name="genre" context="{'group_by':'genre'}"/>
+                <searchpanel>
+                    <field name="genre" icon="fa-tasks"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_book_details_graph" model='ir.ui.view'>
+        <field name="name">book.details.graph</field>
+        <field name="model">book.details</field>
+        <field name="arch" type="xml">
+            <graph type="pie" string="Book Details">
+                <field name="available_copies" type="row"></field>
+                <field name="genre" type="col"></field>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_book_details_pivot" model='ir.ui.view'>
+        <field name="name">book.details.pivot</field>
+        <field name="model">book.details</field>
+        <field name="arch" type="xml">
+            <pivot string="Book Details">
+                <field name="genre" type="row"></field>
+                <field name="available_copies" type="col"></field>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_book_details" model="ir.actions.act_window">
+        <field name="name">Books</field>
+        <field name="res_model">book.details</field>
+        <field name="view_mode">kanban,tree,form,search,graph,pivot</field>
+    </record>
+
+</odoo>
+
+
+

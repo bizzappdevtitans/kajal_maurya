@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_book_loan_details_tree" model="ir.ui.view">
+        <field name="name">book.loan.details.tree</field>
+        <field name="model">book.loan.details</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence_no"/>
+                <field name="issue_date" widget="date"/>
+                <field name="due_date" widget="date"/>
+                <field name="fine_amount"/>
+                <field name="status"
+                    decoration-success="status == 'returned'"
+                    decoration-info="status == 'onloan'"
+                    decoration-danger="status == 'overdue'" widget="badge"/>
+                <field name="member_id"/>
+                <field name="book_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_book_loan_details_form" model="ir.ui.view">
+        <field name="name">book.loan.details.form</field>
+        <field name="model">book.loan.details</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_returned" string="Reset to Returned" type="object" attrs="{'invisible':[('status','=','returned')]}"/>
+                    <button name="action_onloan" string="OnLoan" type="object" class="oe_highlight"/>
+                    <button name="action_overdue" string="Overdue" type="object" class="oe_highlight" attrs="{'invisible':['|',('status','=','overdue'),('status','=','returned')]}"/>
+                    <field name="status" widget="statusbar" nolabel="1" statusbar_visible="returned,onloan,overdue"/>
+
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" string="Books" name="action_book_count" icon="fa-pencil-square-o" attrs="{'invisible': [('book_count', '=', 0)]}">
+                            <div class="o_stat_info">
+                                <field name="book_count" class="o_stat_value"/>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="sequence_no" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="member_id"/>
+                            <field name="due_date" widget="date"/>
+                            <field name="fine_amount"/>
+                            <field name="book_id"/>
+                        </group>
+                        <group>
+
+                            <field name="issue_date" widget="date"/>
+                            <field name="return_date" widget="date"  attrs="{'invisible': ['|',('status','=','onloan'),('status','=','overdue')] }" />
+                            <field name="library_id"/>
+
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_book_loan_details_search" model="ir.ui.view">
+        <field name="name">book.loan.details.search</field>
+        <field name="model">book.loan.details</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="issue_date" widget="date"/>
+                <field name="return_date" widget="date"/>
+                <field name="fine_amount"/>
+                <field name="status" widget="selection"/>
+                <filter string="status" name="status" context="{'group_by':'status'}"/>
+                 <searchpanel>
+                    <field name="book_id" icon="fa-tasks"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="seq_bookloan_details" model="ir.sequence">
+           <field name="name">BookLoan Sequence</field>
+           <field name="code">book.loan.details</field>
+           <field name="prefix">BL</field>
+           <field name="padding">5</field>
+           <field name="active">True</field>
+           <field name="number_increment">1</field>
+           <field name="number_next">1</field>
+           <field name="implementation">standard</field>
+    </record>
+
+
+    <record id="action_book_loan_details" model="ir.actions.act_window">
+        <field name="name">BookLoan</field>
+        <field name="res_model">book.loan.details</field>
+        <field name="view_mode">tree,form,search</field>
+    </record>
+
+
+
+</odoo>

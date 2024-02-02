@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_library_details_tree" model="ir.ui.view">
+        <field name="name">library.details.tree</field>
+        <field name="model">library.details</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence_no"/>
+                <field name="name"/>
+                <field name="address"/>
+                <field name="librarian"/>
+                <field name="founded_year" widget="date"/>
+                <field name="email" widget="email"/>
+                <field name="opening_hours"/>
+                <field name="total_books"/>
+                <field name="total_member_count"/>
+                <field name="subscription_fee"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_library_details_form" model="ir.ui.view">
+        <field name="name">library.details.form</field>
+        <field name="model">library.details</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" string="Members" name="action_count_members" icon="fa-pencil-square-o" attrs="{'invisible': [('member_count', '=', 0)]}">
+                            <div class="o_stat_info">
+                                <field name="member_count" class="o_stat_value"/>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="sequence_no" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="address"/>
+                            <field name="librarian"/>
+                            <field name="founded_year" widget="date"/>
+                            <field name="email"/>
+                        </group>
+                        <group>
+                            <field name="opening_hours"/>
+                            <field name="subscription_fee"/>
+                            <field name="book_ids" widget="many2many_tags" option="{'no_create_edit':True}"/>
+                            <field name="member_ids" widget="many2many_tags" option="{'no_create_edit':True}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+   <record id="view_library_details_search" model="ir.ui.view">
+        <field name="name">library.details.search</field>
+        <field name="model">library.details</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="address"/>
+                <field name="librarian"/>
+                <field name="founded_year" widget="date"/>
+                <field name="email" widget="email"/>
+                <field name="opening_hours"/>
+                <field name="total_books"/>
+                <field name="total_member_count"/>
+                <field name="subscription_fee"/>
+                <filter string="library1"  name="name" domain="[('name','=','library1')]"/>
+                <filter string="library2"  name="name" domain="[('name','=','library2')]"/>
+                <filter string="library3"  name="name" domain="[('name','=','library3')]"/>
+                <filter string="Address"  name="address" context="{'group_by':'address'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_library_details" model="ir.actions.act_window">
+        <field name="name">Library</field>
+        <field name="res_model">library.details</field>
+        <field name="view_mode">tree,form,search</field>
+    </record>
+
+</odoo>

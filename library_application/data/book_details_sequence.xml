@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Sequences for book.details -->
+        <record id="seq_book_details" model="ir.sequence">
+           <field name="name">Book Sequence</field>
+           <field name="code">book.details</field>
+           <field name="prefix">B</field>
+           <field name="padding">5</field>
+        </record>
+
+    </data>
+</odoo>
