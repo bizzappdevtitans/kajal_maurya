@@ -78,6 +78,7 @@
                             <field name="library_id"/>
                         </group>
                         <group>
+                            <field name="availability_message"/>
                             <field name="total_copies" />
                             <field name="avg_rating" widget="priority" class="mr-3"/>
                             <field name="date_added_to_library" widget="date"/>

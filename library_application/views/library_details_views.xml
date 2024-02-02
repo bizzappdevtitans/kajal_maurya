@@ -49,8 +49,8 @@
                         <group>
                             <field name="opening_hours"/>
                             <field name="subscription_fee"/>
-                            <field name="book_ids" widget="many2many_tags" option="{'no_create_edit':True}" attrs="{'invisible': [('member_count', '=', 0)]}"/>
-                            <field name="member_ids" widget="many2many_tags" option="{'no_create_edit':True}" attrs="{'invisible': [('member_count', '=', 0)]}"/>
+                            <field name="book_ids" widget="many2many_tags" option="{'no_create_edit':True}"/>
+                            <field name="member_ids" widget="many2many_tags" option="{'no_create_edit':True}"/>
                         </group>
                     </group>
                 </sheet>

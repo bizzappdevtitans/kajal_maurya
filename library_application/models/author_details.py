@@ -53,21 +53,49 @@ class AuthorDetails(models.Model):
         result = super(AuthorDetails, self).create(vals)
         return result
 
+    # method to capitalize the author name
+
     def write(self, vals):
         if "name" in vals:
             vals["name"] = vals["name"].capitalize()
             print(vals)
         return super(AuthorDetails, self).write(vals)
 
+    # method to raise user error when user try to delete the linked records
     def unlink(self):
         if self.books_written:
             raise UserError("You can't delete the record")
-        return super(AuthorDetails,self).unlink()
+        return super(AuthorDetails, self).unlink()
 
     def name_get(self):
         result = []
         for record in self:
-            result.append(
-                    (record.id, "%s - %s" % (record.name, record.nationality))
-                )
+            result.append((record.id, "%s - %s" % (record.name, record.nationality)))
         return result
+
+    @api.model
+    def _name_search(
+        self, name="", args=None, operator="ilike", limit=100, name_get_uid=None
+    ):
+        args = list(args or [])
+        if name:
+            args += [
+                "|",
+                ("name", operator, name),
+                ("email", operator, name),
+            ]
+        return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+        return super(LibraryDetails, self)._name_search(
+            name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid
+        )
+
+    @api.model
+    def search(self, args, offset=0, limit=None, order=None, count=False):
+        args += [
+            "|",
+            ("nationality", "=", "American"),
+            ("nationality", "=", "British"),
+        ]
+        return super(AuthorDetails, self).search(
+            args, offset=offset, limit=limit, order=order, count=count
+        )

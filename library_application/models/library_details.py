@@ -99,12 +99,21 @@ class LibraryDetails(models.Model):
     def name_get(self):
         result = []
         for record in self:
-            result.append(
-                    (record.id, "%s - %s" % (record.name, record.address))
-                )
+            result.append((record.id, "%s - %s" % (record.name, record.address)))
         return result
 
-
-
-
-
+    @api.model
+    def _name_search(
+        self, name="", args=None, operator="ilike", limit=100, name_get_uid=None
+    ):
+        args = list(args or [])
+        if name:
+            args += [
+                "|",
+                ("name", operator, name),
+                ("address", operator, name),
+            ]
+        return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+        return super(LibraryDetails, self)._name_search(
+            name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid
+        )

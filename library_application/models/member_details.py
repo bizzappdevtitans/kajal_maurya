@@ -43,6 +43,7 @@ class MemberDetails(models.Model):
         copy=False,
         default=lambda self: _("New"),
     )
+    active_status = fields.Text(string="Active Status", readonly=True)
 
     # method for computing borrowed book
     @api.depends("bookloan_ids")
@@ -94,24 +95,38 @@ class MemberDetails(models.Model):
     def unlink(self):
         if self.bookloan_ids:
             raise UserError("You can't delete the record")
-        return super(MemberDetails,self).unlink()
+        return super(MemberDetails, self).unlink()
 
     def name_get(self):
         result = []
         for record in self:
-            result.append(
-                    (record.id, "%s - %s" % (record.name, record.sequence_no))
-                )
+            result.append((record.id, "%s - %s" % (record.name, record.sequence_no)))
         return result
 
-
     @api.model
-    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
+    def _name_search(
+        self, name="", args=None, operator="ilike", limit=100, name_get_uid=None
+    ):
         args = list(args or [])
-        if name :
-            args += ['|',('name', operator, name), ('email', operator, name),]
-        return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+        if name:
+            args += [
+                "|",
+                ("name", operator, name),
+                ("email", operator, name),
+            ]
+            return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+        return super(MemberDetails, self)._name_search(
+            name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid
+        )
 
-
-
-
+    def read(self, fields, load="_classic_read"):
+        result = super(MemberDetails, self).read(fields=fields, load=load)
+        for record in result:
+            if (
+                "subscription_status" in record
+                and record["subscription_status"] == "active"
+            ):
+                record["active_status"] = "This member is an active user"
+            else:
+                record["active_status"] = "This member is no longer an active user"
+        return result

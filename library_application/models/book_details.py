@@ -56,7 +56,6 @@ class BookDetails(models.Model):
         string="Status",
         required=True,
     )
-
     book_condition = fields.Selection(
         [("new", "New"), ("used", "Used"), ("damage", "Damaged")],
         string="Book Condition",
@@ -79,6 +78,7 @@ class BookDetails(models.Model):
         default=lambda self: _("New"),
     )
     book_image = fields.Image(string="Book Image")
+    availability_message = fields.Text(string="Availability Message", readonly=True)
 
     # action for change in 'price' field value according to 'book_condition'
     def action_new(self):
@@ -161,6 +161,7 @@ class BookDetails(models.Model):
         if self.price < 0:
             raise ValidationError(_("Book Price should not be negative"))
 
+    # method to chage the val;ue of 'avg_rating' on the basis of 'price'
     def write(self, vals):
         if "price" in vals:
             price = vals.get("price")
@@ -168,28 +169,52 @@ class BookDetails(models.Model):
                 self.avg_rating = "2"
         return super(BookDetails, self).write(vals)
 
+    # method to raise user error when user try to delete the related record
     def unlink(self):
         if self.author_ids:
             raise UserError("You can't delete the record")
-        return super(BookDetails,self).unlink()
-
-    # @api.model
-    # def _name_search(
-    #     self, name, args=None, operator="ilike", limit=100, name_get_uid=None
-    # ):
-    #     args = args or []
-    #     domain = ["|", ("name", operator, name), ("genre", operator, name)]
-    #     books = self._search(domain + args, limit=limit)
-    #     print(books)
-    #     return books
+        return super(BookDetails, self).unlink()
 
     def name_get(self):
         result = []
         for record in self:
-            result.append(
-                    (record.id, "%s - %s" % (record.name, record.genre))
-                )
+            result.append((record.id, "%s - %s" % (record.name, record.genre)))
         return result
 
+    @api.model
+    def _name_search(
+        self, name="", args=None, operator="ilike", limit=100, name_get_uid=None
+    ):
+        args = list(args or [])
+        if name:
+            args += [
+                "|",
+                ("name", operator, name),
+                ("genre", operator, name),
+            ]
+        return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+        return super(BookDetails, self)._name_search(
+            name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid
+        )
+
+    @api.model
+    def search(self, args, offset=0, limit=None, order=None, count=False):
+        args += [
+            "|",
+            ("genre", "=", "fiction"),
+            ("genre", "=", "non_fiction"),
+        ]
+        return super(BookDetails, self).search(
+            args, offset=offset, limit=limit, order=order, count=count
+        )
+
+    def read(self, fields, load="_classic_read"):
+        result = super(BookDetails, self).read(fields=fields, load=load)
+        for record in result:
+            if "is_available" in record and record["is_available"]:
+                record["availability_message"] = "This book is available"
+            else:
+                record["availability_message"] = "This book is currently unavailable"
+        return result
 
 

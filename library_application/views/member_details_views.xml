@@ -37,6 +37,8 @@
                             <field name="address"/>
                             <field name="email" widget="email"/>
                             <field name="library_id"/>
+                            <field name="active_status"/>
+
                         </group>
                         <group>
                             <field name="membership_start_date" widget="date"/>

@@ -31,7 +31,7 @@ class BookLoanDetails(models.Model):
         readonly=True,
         index=True,
         copy=False,
-        default=lambda self: _('New'),
+        default=lambda self: _("New"),
     )
 
     # validation of ' fine amount'
@@ -120,22 +120,12 @@ class BookLoanDetails(models.Model):
         result = super(BookLoanDetails, self).create(vals)
         return result
 
-
     def name_get(self):
         result = []
         for record in self:
-            result.append(
-                    (record.id, "%s - %s" % (record.sequence_no, record.status))
-                )
+            result.append((record.id, "%s - %s" % (record.sequence_no, record.status)))
         return result
 
-    @api.model
-    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
-        args = list(args or [])
-        if name :
-            args += ['|', '|' , ('name', operator, name), ('email', operator, name),
-                        ('address', operator, name)]
-        return self._search(args, limit=limit, access_rights_uid=name_get_uid)
 
 
 
