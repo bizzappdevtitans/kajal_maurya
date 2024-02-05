@@ -19,6 +19,8 @@
         "views/member_details_views.xml",
         "views/book_loan_details_views.xml",
         "views/book_menu_views.xml",
+        "views/res_config_settings_views.xml",
+
     ],
     "application": True,
     "license": "LGPL-3",

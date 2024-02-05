@@ -33,13 +33,14 @@
         <field name="model">book.details</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="sequence_no"/>
+                <field name="sequence_no" widget="handle" invisible="1"/>
                 <field name="name"/>
-                <field name="genre"/>
+
                 <field name="publication_date"/>
                 <field name="available_copies"/>
-                <field name="date_added_to_library"/>
+                <!-- <field name="date_added_to_library"/> -->
                 <field name="is_available"/>
+                <field name="author_ids" widget="many2many_tags" options="{'color_field':'color'}"/>
                 <field name="book_condition"
                     decoration-success="book_condition == 'new'"
                     decoration-muted="book_condition == 'damage'"
@@ -84,6 +85,7 @@
                             <field name="date_added_to_library" widget="date"/>
                             <field name="is_available" widget="boolean_toggle"/>
                             <field name="author_ids" widget="many2many_tags" option="{'no_create_edit':True}"/>
+
                         </group>
                     </group>
                     <notebook>
@@ -146,11 +148,13 @@
         </field>
     </record>
 
+
     <record id="action_book_details" model="ir.actions.act_window">
         <field name="name">Books</field>
         <field name="res_model">book.details</field>
         <field name="view_mode">kanban,tree,form,search,graph,pivot</field>
     </record>
+
 
 </odoo>
 

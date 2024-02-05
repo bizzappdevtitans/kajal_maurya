@@ -6,7 +6,7 @@
         <field name="model">author.details</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="sequence_no"/>
+                <field name="sequence_no" widget="handle" invisible="1"/>
                 <field name="name"/>
                 <field name="biography"/>
                 <field name="nationality"/>
@@ -40,6 +40,7 @@
                             <field name="books_written" widget="many2many_tags" option="{'no_create_edit':True}"/>
                             <field name="email" widget="email"/>
                             <field name="award_received"/>
+                            <field name="color" widget="color"/>
                         </group>
                     </group>
                 </sheet>

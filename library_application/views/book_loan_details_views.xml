@@ -9,7 +9,7 @@
                 <field name="sequence_no"/>
                 <field name="issue_date" widget="date"/>
                 <field name="due_date" widget="date"/>
-                <field name="fine_amount"/>
+                <!-- <field name="fine_amount"/> -->
                 <field name="status"
                     decoration-success="status == 'returned'"
                     decoration-info="status == 'onloan'"
@@ -49,7 +49,7 @@
                         <group>
                             <field name="member_id"/>
                             <field name="due_date" widget="date"/>
-                            <field name="fine_amount"/>
+                            <!-- <field name="fine_amount"/> -->
                             <field name="book_id"/>
                         </group>
                         <group>
@@ -72,7 +72,7 @@
             <search>
                 <field name="issue_date" widget="date"/>
                 <field name="return_date" widget="date"/>
-                <field name="fine_amount"/>
+                <!-- <field name="fine_amount"/> -->
                 <field name="status" widget="selection"/>
                 <filter string="status" name="status" context="{'group_by':'status'}"/>
                  <searchpanel>

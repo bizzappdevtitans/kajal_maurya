@@ -35,4 +35,6 @@
         parent="book_menu"
         action="action_book_loan_details"
         />
+
+
 </odoo>

@@ -104,7 +104,7 @@ class BookLoanDetails(models.Model):
             record.write({"status": "overdue"})
             if record.status == "overdue":
                 record.book_id.available_copies = record.book_id.available_copies
-                record.fine_amount += 200
+                # record.fine_amount += 200
                 if record.book_id.available_copies < 1:
                     record.book_id.is_available = False
                 else:
@@ -125,8 +125,3 @@ class BookLoanDetails(models.Model):
         for record in self:
             result.append((record.id, "%s - %s" % (record.sequence_no, record.status)))
         return result
-
-
-
-
-

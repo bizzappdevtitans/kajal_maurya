@@ -30,6 +30,8 @@ class AuthorDetails(models.Model):
     total_books_written = fields.Integer(
         string="Total Books Written", compute="_compute_total_books_written"
     )
+    color = fields.Char()
+
 
     # method for total book written count
     @api.depends("books_written")

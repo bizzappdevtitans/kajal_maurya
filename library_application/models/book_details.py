@@ -80,6 +80,7 @@ class BookDetails(models.Model):
     book_image = fields.Image(string="Book Image")
     availability_message = fields.Text(string="Availability Message", readonly=True)
 
+
     # action for change in 'price' field value according to 'book_condition'
     def action_new(self):
         self.write({"book_condition": "new"})
