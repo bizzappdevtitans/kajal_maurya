@@ -5,6 +5,7 @@ from odoo.exceptions import UserError, ValidationError
 class AuthorDetails(models.Model):
     _name = "author.details"
     _description = "Author Information"
+    _order="sequence_handle"
 
     name = fields.Char(string="Author Name", required=True)
     biography = fields.Char(string="Biography")
@@ -30,7 +31,8 @@ class AuthorDetails(models.Model):
     total_books_written = fields.Integer(
         string="Total Books Written", compute="_compute_total_books_written"
     )
-    color = fields.Char()
+    color = fields.Integer(string="Color")
+    sequence_handle=fields.Integer(string="Sequence" ,default="1")
 
 
     # method for total book written count

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_event_details_tree" model="ir.ui.view">
+        <field name="name">event.details.tree</field>
+        <field name="model">event.details</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence_no"/>
+                <field name="name"/>
+                <field name="event_type"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="participant_ids" widget="many2many_tags" options="{'color_field':'color'}"/>
+                <field name="registration_deadline"/>
+                <field name="registration_count"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="view_event_details_form" model="ir.ui.view">
+        <field name="name">event.details.form</field>
+        <field name="model">event.details</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                           <field name="name"/>
+                           <field name="event_type"/>
+                           <field name="date_start"/>
+                        </group>
+                        <group>
+                            <field name="participant_ids" widget="many2many_tags"/>
+                            <field name="date_end"/>
+                            <field name="registration_deadline"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_event_details" model="ir.actions.act_window">
+        <field name="name">Event</field>
+        <field name="res_model">event.details</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+</odoo>

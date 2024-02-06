@@ -5,12 +5,12 @@ from odoo.exceptions import UserError, ValidationError
 class BookLoanDetails(models.Model):
     _name = "book.loan.details"
     _description = "Book Loan Information"
+    _order = "sequence_handle"
     _rec_name = "book_id"
 
     issue_date = fields.Date(string="Isuue Date")
     return_date = fields.Date(string="Return Date")
     due_date = fields.Date(string="Due Date")
-    fine_amount = fields.Float(string="Fine Amount")
     status = fields.Selection(
         [
             ("onloan", "On Loan"),
@@ -33,6 +33,9 @@ class BookLoanDetails(models.Model):
         copy=False,
         default=lambda self: _("New"),
     )
+    sequence_handle = fields.Integer(string="Sequence", default="1")
+    color = fields.Integer(string="Color")
+    fine_amount=fields.Float(string="Fine Amount")
 
     # validation of ' fine amount'
     @api.constrains("fine_amount")
@@ -79,7 +82,6 @@ class BookLoanDetails(models.Model):
             record.write({"status": "returned"})
             if record.status == "returned":
                 record.book_id.available_copies += 1
-                record.fine_amount = 0
                 record.return_date = fields.Date.today()
                 if record.book_id.available_copies < 1:
                     record.book_id.is_available = False
@@ -92,7 +94,6 @@ class BookLoanDetails(models.Model):
             record.write({"status": "onloan"})
             if record.status == "onloan":
                 record.book_id.available_copies -= 1
-                record.fine_amount = 0
                 if record.book_id.available_copies < 1:
                     record.book_id.is_available = False
                 else:
@@ -104,7 +105,6 @@ class BookLoanDetails(models.Model):
             record.write({"status": "overdue"})
             if record.status == "overdue":
                 record.book_id.available_copies = record.book_id.available_copies
-                # record.fine_amount += 200
                 if record.book_id.available_copies < 1:
                     record.book_id.is_available = False
                 else:
@@ -125,3 +125,11 @@ class BookLoanDetails(models.Model):
         for record in self:
             result.append((record.id, "%s - %s" % (record.sequence_no, record.status)))
         return result
+
+    # @api.depends('fine_amount')
+    # def _compute_fine_amount(self):
+    #     params = self.env['ir.config_parameter'].sudo()
+    #     fine_amount_param = int(params.get_param('library_application.fine_amount_param'))
+    #     for record in self:
+    #         record.fine_amount_param=fine_amount if fine_amount_param else 0
+

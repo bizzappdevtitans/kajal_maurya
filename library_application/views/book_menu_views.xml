@@ -36,5 +36,11 @@
         action="action_book_loan_details"
         />
 
+    <menuitem id="event_details_menu"
+        name="event_details"
+        parent="book_menu"
+        action="action_event_details"
+        />
+
 
 </odoo>

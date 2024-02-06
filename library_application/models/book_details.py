@@ -6,6 +6,7 @@ from odoo.exceptions import UserError, ValidationError
 class BookDetails(models.Model):
     _name = "book.details"
     _description = "Book Information"
+    _order="sequence_handle"
 
     name = fields.Char(string="Title", required=True)
     author_ids = fields.Many2many(
@@ -79,6 +80,7 @@ class BookDetails(models.Model):
     )
     book_image = fields.Image(string="Book Image")
     availability_message = fields.Text(string="Availability Message", readonly=True)
+    sequence_handle=fields.Integer(string="Sequence" ,default="1")
 
 
     # action for change in 'price' field value according to 'book_condition'
@@ -217,5 +219,6 @@ class BookDetails(models.Model):
             else:
                 record["availability_message"] = "This book is currently unavailable"
         return result
+
 
 

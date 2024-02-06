@@ -6,7 +6,8 @@
         <field name="model">author.details</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="sequence_no" widget="handle" invisible="1"/>
+                <field name="sequence_handle" widget="handle"/>
+                <field name="sequence_no"/>
                 <field name="name"/>
                 <field name="biography"/>
                 <field name="nationality"/>
@@ -37,10 +38,10 @@
                            <field name="birthdate" widget="date"/>
                         </group>
                         <group>
-                            <field name="books_written" widget="many2many_tags" option="{'no_create_edit':True}"/>
+                            <field name="books_written" widget="many2many_tags" option="{'no_create_edit':True,}"/>
                             <field name="email" widget="email"/>
                             <field name="award_received"/>
-                            <field name="color" widget="color"/>
+                            <field name="color" widget="color_picker"/>
                         </group>
                     </group>
                 </sheet>

@@ -5,6 +5,7 @@ from odoo.exceptions import UserError, ValidationError
 class MemberDetails(models.Model):
     _name = "member.details"
     _description = "Member Information"
+    _order="sequence_handle"
 
     name = fields.Char(string="Name")
     address = fields.Text(string="Address")
@@ -44,6 +45,10 @@ class MemberDetails(models.Model):
         default=lambda self: _("New"),
     )
     active_status = fields.Text(string="Active Status", readonly=True)
+    sequence_handle=fields.Integer(string="Sequence" ,default="1")
+    color = fields.Integer(string="Color")
+    participant_count = fields.Integer(compute="_compute_participant_count")
+
 
     # method for computing borrowed book
     @api.depends("bookloan_ids")
@@ -130,3 +135,24 @@ class MemberDetails(models.Model):
             else:
                 record["active_status"] = "This member is no longer an active user"
         return result
+
+    def _compute_participant_count(self):
+        for record in self:
+            record.participant_count = self.env["event.details"].search_count(
+                [("participant_ids", "=", record.id)]
+            )
+
+    # smart button implementation
+    def action_count_participants(self):
+            return {
+                "type": "ir.actions.act_window",
+                "name": "Participants",
+                "view_mode": "tree,form",
+                "res_model": "event.details",
+                "target": "current",
+                "domain": [("participant_ids", "=", self.id)],
+                'context': "{'create': False}"
+
+            }
+
+

@@ -13,11 +13,13 @@
         "data/library_details_sequence.xml",
         "data/member_details_sequence.xml",
         "data/bookloan_details_sequence.xml",
+        "data/event_details_sequence.xml",
         "views/book_details_views.xml",
         "views/author_details_views.xml",
         "views/library_details_views.xml",
         "views/member_details_views.xml",
         "views/book_loan_details_views.xml",
+        "views/event_details_views.xml",
         "views/book_menu_views.xml",
         "views/res_config_settings_views.xml",
 

@@ -4,3 +4,4 @@ from . import library_details
 from . import member_details
 from . import book_loan_details
 from . import res_config_settings
+from . import event_details

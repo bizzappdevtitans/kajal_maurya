@@ -33,12 +33,11 @@
         <field name="model">book.details</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="sequence_no" widget="handle" invisible="1"/>
+                <field name="sequence_handle" widget="handle"/>
+                <field name="sequence_no"/>
                 <field name="name"/>
-
                 <field name="publication_date"/>
                 <field name="available_copies"/>
-                <!-- <field name="date_added_to_library"/> -->
                 <field name="is_available"/>
                 <field name="author_ids" widget="many2many_tags" options="{'color_field':'color'}"/>
                 <field name="book_condition"

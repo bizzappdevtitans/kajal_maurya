@@ -5,6 +5,7 @@ from odoo.exceptions import UserError, ValidationError
 class LibraryDetails(models.Model):
     _name = "library.details"
     _description = "Library Information"
+    _order="sequence_handle"
 
     name = fields.Char(string="Name", required=True)
     address = fields.Text(string="Address")
@@ -35,6 +36,8 @@ class LibraryDetails(models.Model):
         copy=False,
         default=lambda self: _("New"),
     )
+    sequence_handle=fields.Integer(string="Sequence" ,default="1")
+
 
     # method for computing total books
     @api.depends("book_ids")
