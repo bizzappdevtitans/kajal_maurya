@@ -50,6 +50,7 @@
                             <field name="member_id"/>
                             <field name="due_date" widget="date"/>
                             <field name="book_id"/>
+                            <field name="fine_amount"/>
                         </group>
                         <group>
 
@@ -73,6 +74,7 @@
                 <field name="issue_date" widget="date"/>
                 <field name="return_date" widget="date"/>
                 <field name="status" widget="selection"/>
+                <field name="fine_amount"/>
                 <filter string="status" name="status" context="{'group_by':'status'}"/>
                  <searchpanel>
                     <field name="book_id" icon="fa-tasks"/>

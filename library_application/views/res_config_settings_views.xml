@@ -15,8 +15,12 @@
                                 <div class="o_setting_left_pane"/>
                                 <div class="o_setting_right_pane">
                                     <div class="text-muted content-group mt16">
-                                        <span>Fine Amount  </span>
-                                        <field name="fine_amount_param" class="text-center oe_inline" />
+                                        <span> Max Book Per User  </span>
+                                        <field name="max_book_per_user" class="text-center oe_inline" />
+                                    </div>
+                                    <div class="text-muted content-group mt16">
+                                        <span> Book Return Period </span>
+                                        <field name="book_return_period" class="text-center oe_inline" />
                                     </div>
                                 </div>
                             </div>

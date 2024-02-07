@@ -5,7 +5,7 @@ from odoo.exceptions import UserError, ValidationError
 class AuthorDetails(models.Model):
     _name = "author.details"
     _description = "Author Information"
-    _order="sequence_handle"
+    _order = "sequence_handle"
 
     name = fields.Char(string="Author Name", required=True)
     biography = fields.Char(string="Biography")
@@ -32,8 +32,7 @@ class AuthorDetails(models.Model):
         string="Total Books Written", compute="_compute_total_books_written"
     )
     color = fields.Integer(string="Color")
-    sequence_handle=fields.Integer(string="Sequence" ,default="1")
-
+    sequence_handle = fields.Integer(string="Sequence", default="1")
 
     # method for total book written count
     @api.depends("books_written")
@@ -68,7 +67,7 @@ class AuthorDetails(models.Model):
     # method to raise user error when user try to delete the linked records
     def unlink(self):
         if self.books_written:
-            raise UserError("You can't delete the record")
+            raise UserError("You can't delete the records")
         return super(AuthorDetails, self).unlink()
 
     def name_get(self):
@@ -86,7 +85,7 @@ class AuthorDetails(models.Model):
             args += [
                 "|",
                 ("name", operator, name),
-                ("email", operator, name),
+                ("nationality", operator, name),
             ]
         return self._search(args, limit=limit, access_rights_uid=name_get_uid)
         return super(LibraryDetails, self)._name_search(

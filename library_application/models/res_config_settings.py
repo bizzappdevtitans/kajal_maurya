@@ -1,10 +1,14 @@
-from odoo import models, fields,api
+from odoo import models, fields, api
 
 
 class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
-    fine_amount_param = fields.Float(string="Fine Amount", config_parameter="fine_amount_param")
-
+    max_book_per_user = fields.Integer(
+        string="Max Book", config_parameter="max_book_per_user"
+    )
+    book_return_period = fields.Integer(
+        string="Book Return Period", config_parameter="book_return_period"
+    )
 
 

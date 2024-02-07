@@ -6,6 +6,7 @@ from odoo.exceptions import UserError, ValidationError
 class EventDetails(models.Model):
     _name = "event.details"
     _description = "Event Information"
+    _order = "sequence_handle"
 
     name = fields.Char(string="Name", required=True)
     event_type = fields.Selection(
@@ -16,15 +17,15 @@ class EventDetails(models.Model):
             ("other", "Other"),
         ]
     )
-    date_start = fields.Date(string="Date Start",default=fields.Date.today())
-    date_end = fields.Date(string="Date End",default=fields.Date.today())
+    date_start = fields.Date(string="Date Start", default=fields.Date.today())
+    date_end = fields.Date(string="Date End", default=fields.Date.today())
     speaker_id = fields.Many2one(comodel_name="author.details", string="Speaker")
     participant_ids = fields.Many2many(
         comodel_name="member.details", string="Participants"
     )
     registration_deadline = fields.Date(string="Reg. Deadline")
     registration_count = fields.Integer(
-        string="Reg Count", compute="_compute_registration_count"
+        string="Reg. Count", compute="_compute_registration_count"
     )
     sequence_no = fields.Char(
         string="Number",
@@ -34,6 +35,8 @@ class EventDetails(models.Model):
         copy=False,
         default=lambda self: _("New"),
     )
+
+    sequence_handle = fields.Integer(string="Sequence", default="1")
 
     # Sequence for event.details
     @api.model
@@ -56,10 +59,9 @@ class EventDetails(models.Model):
     @api.onchange("date_start")
     def _onchange_start_date(self):
         if self.date_start > self.date_end:
-            raise ValidationError(
-                _(
-                    " start date should not be greater than end date"
-                )
-            )
+            raise ValidationError(_(" start date should not be greater than end date"))
 
-
+    def unlink(self):
+        if self.participant_ids:
+            raise UserError("You can't delete the records")
+        return super(EventDetails, self).unlink()

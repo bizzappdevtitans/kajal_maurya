@@ -6,6 +6,7 @@
         <field name="model">event.details</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="sequence_handle" widget="handle"/>
                 <field name="sequence_no"/>
                 <field name="name"/>
                 <field name="event_type"/>
